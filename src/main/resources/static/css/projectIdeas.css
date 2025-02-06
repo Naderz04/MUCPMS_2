@@ -1,0 +1,83 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+}
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 1% 5% 5% 17%;
+    font-size: 0.9em;
+    width: 82%; /* Ensure table fits within the screen */
+    max-width: 100%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.styled-table thead tr {
+    background-color: #264653;
+    color: #151A2D;
+    text-align: left;
+    font-weight: bold;
+}
+
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+    word-wrap: break-word; /* Prevent overflow of long text */
+}
+
+.styled-table tbody tr {
+    border-bottom: 1px solid #151A2D;
+    background-color: #151A2D;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #151A2D;
+}
+
+.styled-table tbody tr:hover {
+    background-color: #f1c40f;
+    color: #000;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #151A2D;
+}
+
+.styled-table td:nth-child(6) {
+    text-align: center;
+    font-weight: bold;
+    color: #28a745; /* Green for "Available" */
+}
+
+/* Control column widths */
+.styled-table th:nth-child(1),
+.styled-table td:nth-child(1) {
+    width: 5%; /* Narrow for the serial number column */
+}
+
+.styled-table th:nth-child(2),
+.styled-table td:nth-child(2) {
+    width: 20%; /* Medium width for project title */
+}
+
+.styled-table th:nth-child(3),
+.styled-table td:nth-child(3) {
+    width: 15%; /* Medium width for type */
+}
+
+.styled-table th:nth-child(4),
+.styled-table td:nth-child(4) {
+    width: 10%; /* Narrow for "Suggested By" */
+}
+
+.styled-table th:nth-child(5),
+.styled-table td:nth-child(5) {
+    width: 40%; /* Wider for description */
+}
+
+.styled-table th:nth-child(6),
+.styled-table td:nth-child(6) {
+    width: 10%; /* Narrow for status */
+}

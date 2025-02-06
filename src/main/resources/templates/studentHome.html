@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="<http://www.thymeleaf.org>">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/StudentHome.css}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+</head>
+<body>
+<aside class="sidebar">
+    <!-- Sidebar header -->
+    <header class="sidebar-header">
+        <a href="#" class="header-logo">
+            <img src="/static/images/Logo5-removebg.png" alt="MUCPMS">
+        </a>
+
+        <!-- User Info Section -->
+        <div class="user-info">
+            <hr class="divider">
+            <div class="user-details">
+                <img src="/static/images/Dr.fatima-abdallah.jpg" alt="User Avatar" class="user-avatar">
+                <span class="user-name">John Doe</span>
+            </div>
+            <hr class="divider">
+        </div>
+        <button class="toggler menu-toggler">
+            <span class="material-symbols-rounded">menu</span>
+        </button>
+    </header>
+
+    <nav class="sidebar-nav">
+        <!-- Primary top nav -->
+        <ul class="nav-list primary-nav">
+            <li class="nav-item">
+                <a href="/templates/instructorHome.html" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">dashboard</span>
+                    <span class="nav-label">Home</span>
+                </a>
+                <span class="nav-tooltip">Dashboard</span>
+            </li>
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">notifications</span>
+                    <span class="nav-label">Notifications</span>
+                </a>
+                <span class="nav-tooltip">Notifications</span>
+            </li>
+            <li class="nav-item">
+                <a href="/templates/projectIdeas.html" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">group</span>
+                    <span class="nav-label">Project Ideas</span>
+                </a>
+                <span class="nav-tooltip">Team</span>
+            </li>
+
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">chat</span>
+                    Chats
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">note</span>
+                    Notes
+                </a>
+            </li>
+        </ul>
+
+        <!-- Secondary bottom nav -->
+        <ul class="nav-list secondary-nav">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">account_circle</span>
+                    <span class="nav-label">Profile</span>
+                </a>
+                <span class="nav-tooltip">Profile</span>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">logout</span>
+                    <span class="nav-label">Logout</span>
+                </a>
+                <span class="nav-tooltip">Logout</span>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+
+<div class="todo-container">
+    <div class="tabs">
+        <button class="tab active" data-section="assigned">Assigned</button>
+        <button class="tab" data-section="missing">Missing</button>
+        <button class="tab" data-section="done">Done</button>
+    </div>
+    <div class="tasks">
+        <div class="task-section" id="assigned">
+            <h2>Assigned Tasks</h2>
+            <div class="task" th:each="task : ${assignedTasks}" data-task-id="${task.id}" data-project-id="${task.project.id}">
+                <div class="taskHeader">
+                    <h2 th:text="${task.taskName}">Task Name</h2>
+                    <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+                </div>
+                <!-- Task Details Dropdown -->
+                <div class="assignment-content hidden">
+                    <p th:text="${task.taskDescription}">Description</p>
+                    <!-- Instructor's Attached File -->
+                    <div class="attachment">
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
+                        <div class="attachment-info">
+                            <div class="filename">
+                                <p th:text="${task.attachedFilePath}">Description</p>
+                            </div>
+                            <div class="filetype">Word</div>
+                        </div>
+                    </div>
+                    <!-- Horizontal Line for Separation -->
+                    <hr class="divider">
+                    <!-- Drag-and-Drop File Upload Component -->
+                    <hr class="divider">
+
+                    <!-- Loop over projects related to the task -->
+                        <form th:action="@{/students/submitTask}" method="post" enctype="multipart/form-data">
+                            <!-- Hidden fields to ensure the task is submitted for the correct project -->
+                            <input type="hidden" name="taskId" th:value="${task.taskId}">
+                            <input type="hidden" name="projectId" th:value="${project.projectId}">
+
+                            <!-- Drag-and-Drop File Upload Component -->
+                            <label class="upload-area">
+                            <span class="upload-area-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="var(--c-action-primary)" />
+                                </svg>
+                            </span>
+                                <span class="upload-area-title">Drag file(s) here to upload.</span>
+                                <span class="upload-area-description">
+                                Alternatively, you can select a file by <br/><strong>clicking here</strong>
+                            </span>
+                                <input type="file" name="file" class="file-input" accept=".doc,.docx,.pdf" style="display: none;" required>
+                            </label>
+
+                            <!-- Submit Button -->
+                            <button type="submit" class="btn-submit">Submit File for </button>
+                        </form>
+                    <!-- Submit Button -->
+                </div>
+            </div>
+        </div>
+        <div class="task-section hidden" id="missing">
+            <h2>Missing Tasks</h2>
+            <div class="task" th:each="task : ${missingTasks}" th:attr="data-attached-file-path=${task.attachedFilePath}">
+                <div class="taskHeader">
+                    <h2 th:text="${task.taskName}">Task Name</h2>
+                    <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+                </div>
+                <!-- Add the hidden class here -->
+                <div class="assignment-content hidden">
+                    <p th:text="${task.taskDescription}">Description</p>
+                    <div class="attachment">
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
+                        <div class="attachment-info">
+                            <div class="filename">
+                                <p th:text="${task.attachedFilePath}">Description</p>
+                            </div>
+                            <div class="filetype">Word</div>
+                        </div>
+                    </div>
+                    <div class="work-status">
+                        <button class="add-work">Add File</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="task-section hidden" id="done">
+            <h2>Completed Tasks</h2>
+            <div class="task" th:each="task : ${doneTasks}" th:attr="data-attached-file-path=${task.attachedFilePath}">
+                <div class="taskHeader">
+                    <h2 th:text="${task.taskName}">Task Name</h2>
+                    <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+                </div>
+
+                <!-- Add the hidden class here -->
+
+                <div class="assignment-content hidden">
+                    <p th:text="${task.taskDescription}">Description</p>
+                    <div class="attachment">
+                        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
+                        <div class="attachment-info">
+                            <div class="filename">
+                                <p th:text="${task.attachedFilePath}">Description</p>
+                            </div>
+                            <div class="filetype">Word</div>
+                        </div>
+                    </div>
+                    <div class="work-status">
+                        <button class="add-work">Add File</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    const tabs = document.querySelectorAll(".tab");
+  const taskSections = document.querySelectorAll(".task-section");
+
+  // Add click event to each tab
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      // Remove active class from all tabs
+      tabs.forEach(t => t.classList.remove("active"));
+      // Hide all task sections
+      taskSections.forEach(section => section.classList.add("hidden"));
+
+      // Set the clicked tab as active
+      tab.classList.add("active");
+
+      // Show the corresponding task section
+      const sectionId = tab.dataset.section;
+      document.getElementById(sectionId).classList.remove("hidden");
+    });
+  });
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.task').forEach(task => {
+        const taskHeader = task.querySelector('.taskHeader');
+        const assignmentContent = task.querySelector('.assignment-content');
+        const uploadArea = task.querySelector('.upload-area');
+        const fileInput = task.querySelector('.file-input');
+        const submitButton = task.querySelector('.btn-submit');
+        let currentFile = null;
+
+        // Toggle task details dropdown
+        taskHeader.addEventListener('click', function () {
+            assignmentContent.classList.toggle('hidden');
+        });
+
+<!--        // Click to open file dialog-->
+<!--        uploadArea.addEventListener('click', () => {-->
+<!--            fileInput.click();-->
+<!--        });-->
+
+        // Handle file selection
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                currentFile = file;
+                uploadArea.querySelector('.upload-area-title').textContent = `Selected: ${file.name}`;
+            }
+        });
+
+        // Drag-and-drop functionality
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+            });
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                currentFile = file;
+                uploadArea.querySelector('.upload-area-title').textContent = `Selected: ${file.name}`;
+                fileInput.files = e.dataTransfer.files;
+            }
+        });
+
+        // Handle file submission
+        submitButton.addEventListener('submit', async () => {
+            if (!currentFile) {
+                alert("Please select a file before submitting.");
+                return;
+            }
+
+            const taskId = task.getAttribute('data-task-id');
+            const projectId = task.getAttribute('data-project-id');
+
+            const formData = new FormData();
+            formData.append('taskId', taskId);
+            formData.append('projectId', projectId);
+            formData.append('submissionFile', currentFile);
+
+            try {
+                const response = await fetch('/students/submitTask', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    alert('File submitted successfully!');
+                    currentFile = null;
+                    uploadArea.querySelector('.upload-area-title').textContent = "Drag file(s) here to upload.";
+                } else {
+                    alert('Failed to submit file. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error submitting file:', error);
+                alert('An error occurred while submitting the file.');
+            }
+        });
+    });
+});
+
+
+</script>
+</body>
+
+</html>

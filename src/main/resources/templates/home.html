@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <!-- basic -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- mobile metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <!-- site metas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>COTO</title>
+    <link rel="stylesheet prefetch" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.0.0/css/font-awesome.min.css">
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- bootstrap css -->
+    <!-- style css -->
+
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+
+<body>
+<div class="page1">
+    <!-- header section start -->
+    <div class="header-nav" th:style="'background-image:url(' + @{/static/images/about.jpg} + ')'">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="logo" href="home"><img th:src="@{/images/Logo5-removebg.png}"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/login}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/register}">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <!-- header section end -->
+    <!-- banner section start -->
+    <div class="banner_section layout_padding" th:style="'background-image:url(' + @{images/HomePhoto.jpg} + ')'">
+        <div id="main_slider" data-ride="carousel">
+            <div class="carousel-item active">
+                <div class="container" id="first-container">
+                    <h1 class="banner_taital mx-lg-5 stroke-text">
+                        <span class="stroke-text">MU</span><br>
+                        Capstone<br>Projects<br /> Management System
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- about  -->
+    <div id="about2" class="about2">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <div class="about-box">
+                        <h2> Why <strong>Using <span class="yellow">MU</span>CPMS</strong></h2>
+                        <p>
+                            The capstone project is one of the most important stages in a student's life, where they showcase their skills and the culmination of what they've learned. Given its significance, it needs to be organized on a single platform to simplify the process for students. Instead of burdening them with the need to submit each stage through different applications, this website centralizes everything, making the capstone project stage more streamlined and efficient.
+                        </p>
+                        <a href="Javascript:void(0)">Read more</a>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-12">
+                    <div class="about-box">
+                        <figure><img th:src="@{/images/about.jpg}" alt="#" /></figure>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="CapstoneJourneyContainer" id="CapstoneJourneyContainer">
+        <h1 class="stroke-text">Capstone Project Journey</h1>
+    </div>
+
+    <div class="SelectPartnerContainer">
+        <div class="text-content">
+            <h1 class="stroke-text">Stage 1: Selecting Your Partner</h1>
+            <p>
+                Your capstone partner is more than just a collaborator—they’re your partner in success.<br>
+                Choose wisely! Select someone you have strong chemistry with, who shares your passion, <br>and who will drive you both toward achieving great results together.
+            </p>
+        </div>
+        <img th:src="@{/images/partners.jpg}" alt="Partners Image" />
+    </div>
+
+    <div class="SelectIdeaContainer">
+        <div class="text-content">
+            <h1 class="stroke-text">Stage 2: Selecting Project Idea</h1>
+            <p>
+                Choosing the right capstone project idea is a critical step in your academic journey. It should be a topic that excites you and aligns with your career goals. Focus on real-world problems that spark your curiosity, while also considering the feasibility and resources available. A well-chosen project idea will not only challenge you but also showcase your skills and innovation, setting you apart in your field.
+            </p>
+        </div>
+        <img th:src="@{/images/ProjectIdea.png}" alt="Project Idea Image" />
+    </div>
+    <div class="SelectSupervisor">
+        <div class="text-content">
+            <h1 class="stroke-text">Stage 3: Selecting Your Supervisor</h1>
+            <div class="slider" id="slider">
+                <!-- Slide 1 -->
+                <div class="slide" id="slide-left">
+                    <div class="slide-holder">
+                        <div class="slide-bg bg-previous" th:data-bg="@{/images/Dr.mubarak.jpeg}"></div>
+                        <div class="slide-bg bg-current" th:data-bg="@{/images/Dr.fatima-abdallah.jpg}"></div>
+                        <div class="slide-bg bg-next" th:data-bg="@{/images/Dr.Rayan.png}"></div>
+                        <div class="slide-bg bg-next-next" th:data-bg="@{/images/HomePhoto.jpg}"></div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide" id="slide-center">
+                    <div class="slide-holder">
+                        <div class="slide-bg bg-previous" th:data-bg="@{/images/Dr.fatima-abdallah.jpg}"></div>
+                        <div class="slide-bg bg-current" th:data-bg="@{/images/Dr.Rayan.png}"></div>
+                        <div class="slide-bg bg-next" th:data-bg="@{/images/HomePhoto.jpg}"></div>
+                        <div class="slide-bg bg-next-next" th:data-bg="@{/images/Dr.mubarak.jpeg}"></div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide" id="slide-right">
+                    <div class="slide-holder">
+                        <div class="slide-bg bg-previous" th:data-bg="@{/images/Dr.Rayan.png}"></div>
+                        <div class="slide-bg bg-current" th:data-bg="@{/images/HomePhoto.jpg}"></div>
+                        <div class="slide-bg bg-next" th:data-bg="@{/images/Dr.mubarak.jpeg}"></div>
+                        <div class="slide-bg bg-next-next" th:data-bg="@{/images/Dr.fatima-abdallah.jpg}"></div>
+                    </div>
+                </div>
+
+                <!-- Arrows -->
+                <a class="arrow" href="#" id="left-arrow"><i class="fa fa-arrow-circle-o-left"></i></a>
+                <a class="arrow" href="#" id="right-arrow"><i class="fa fa-arrow-circle-o-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="SubmitBussinessReq">
+        <div class="text-content">
+            <h1 class="stroke-text">Stage 4: Submitting High Level Bussiness Requirements</h1>
+            <ul>
+                <li> Define Project Goals and Objectives </li>
+                <li> Conduct Stakeholder Analysis </li>
+                <li>Prioritize Key Features</li>
+                <li>Consider User Experience(UX) Design </li>
+                <li> Define Project Goals and Objectives </li>
+                <li>Prototype and Iterate </li>
+            </ul>
+        </div>
+        <img th:src="@{/images/ProjectIdea.png}" alt="Project Idea Image" />
+    </div>
+
+    <div class="SelectIdeaContainer">
+        <div class="text-content">
+            <h1 class="stroke-text">Stage 5: Survey Similar Applications</h1>
+            <p>
+                Survey similar applications and learn from them to help you shape your detailed functional requirements. Analyze their strengths and weaknesses, and identify key features that could enhance your own project. This research will provide valuable insights to refine your design and user experience.
+            </p>
+        </div>
+        <img th:src="@{/images/surveyApps.png}" alt="Survey Apps Image" />
+    </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/velocity/1.2.3/velocity.min.js'></script>
+<script th:src="@{/js/slider.js}"></script>
+</body>
+</html>

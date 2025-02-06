@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="<http://www.thymeleaf.org>">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+  <link rel="stylesheet" th:href="@{/css/instructorHome.css}">
+  <link rel="stylesheet" th:href="@{/css/projectIdeas.css}">
+<!--  <link rel="stylesheet" th:href="@{css/projectIdeas.css}">-->
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+</head>
+<body>
+<div id="navbarContainer"></div>
+
+<aside class="sidebar">
+  <!-- Sidebar header -->
+  <header class="sidebar-header">
+    <a href="#" class="header-logo">
+      <img src="/static/images/Logo5-removebg.png" alt="MUCPMS">
+    </a>
+
+    <!-- User Info Section -->
+    <div class="user-info">
+      <hr class="divider">
+      <div class="user-details">
+        <img src="/static/images/Dr.fatimaabdallah.jpg" alt="User Avatar" class="user-avatar">
+        <span class="user-name">John Doe</span>
+      </div>
+      <hr class="divider">
+    </div>
+    <button class="toggler menu-toggler">
+      <span class="material-symbols-rounded">menu</span>
+    </button>
+  </header>
+
+  <nav class="sidebar-nav">
+    <!-- Primary top nav -->
+    <ul class="nav-list primary-nav">
+      <li class="nav-item">
+        <a th:href="@{/instructorHome}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">dashboard</span>
+          <span class="nav-label">Home</span>
+        </a>
+        <span class="nav-tooltip">Dashboard</span>
+      </li>
+      <li class="nav-item">
+        <a th:href="@{/instructorProjects}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">calendar_today</span>
+          <span class="nav-label">My Projects</span>
+        </a>
+        <span class="nav-tooltip">Calendar</span>
+      </li>
+      <li class="nav-item">
+        <a href="/templates/instructorProjects.html" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">swipe_right</span>
+          <span class="nav-label">Projects Progress </span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">notifications</span>
+          <span class="nav-label">Notifications</span>
+        </a>
+        <span class="nav-tooltip">Notifications</span>
+      </li>
+      <li class="nav-item">
+        <a th:href="@{/projectIdeas}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">group</span>
+          <span class="nav-label">Project Ideas</span>
+        </a>
+        <span class="nav-tooltip">Team</span>
+      </li>
+
+
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">chat</span>
+
+          Chats
+        </a>
+      </li>
+    </ul>
+
+    <!-- Secondary bottom nav -->
+    <ul class="nav-list secondary-nav">
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">account_circle</span>
+          <span class="nav-label">Profile</span>
+        </a>
+        <span class="nav-tooltip">Profile</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">logout</span>
+          <span class="nav-label">Logout</span>
+        </a>
+        <span class="nav-tooltip">Logout</span>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+
+<table class="styled-table">
+  <thead>
+  <tr>
+    <th>#</th>
+    <th>Project Title</th>
+    <th>Type</th>
+    <th>Suggested By</th>
+    <th>Description</th>
+    <th>Status</th>
+  </tr>
+  </thead>
+  <tbody>
+  <!-- Thymeleaf loop to iterate through project ideas -->
+  <tr th:each="projectIdea, iterStat : ${projectIdeas}">
+    <td th:text="${iterStat.index + 1}"></td>
+    <td th:text="${projectIdea.projectTitle}"></td>
+    <td th:text="${projectIdea.type}"></td>
+    <td th:text="${projectIdea.suggestedBy}"></td>
+    <td th:text="${projectIdea.projectDescription}"></td>
+    <td th:text="${projectIdea.availability}"></td>
+  </tr>
+  </tbody>
+</table>
+
+
+</body>
+
+<!--<script>-->
+<!--  function loadComponent(url, containerId) {-->
+<!--      fetch(url)-->
+<!--          .then(response => response.text())-->
+<!--          .then(data => {-->
+<!--              document.getElementById(containerId).innerHTML = data;-->
+<!--          })-->
+<!--          .catch(error => console.error('Error loading component:', error));-->
+<!--  }-->
+
+<!--  // Load navbar and sidebar-->
+<!--  loadComponent('navbar.html', 'navbarContainer');-->
+<!--  loadComponent('sidebar.html', 'sidebarContainer');-->
+<!--</script>-->
+</html>

@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="<http://www.thymeleaf.org>">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Management</title>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" th:href="@{/css/sidebar.css}">
+    <link rel="stylesheet" th:href="@{/css/instructorHome.css}">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_task"/>
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=task_alt"/>
+    <style>
+        body {
+                font-family: "Poppins", sans-serif;
+                background-color: #f4f7fb;
+                margin: 0;
+                display: flex;
+                height: 100vh;
+            }
+
+            .container {
+                width: 370px;
+                background-color: #151A2D;
+                border-left:10px solid gold;
+                border-right: 1px solid #ddd;
+                overflow-y: scroll;
+                margin-left: 13%;
+                height: fit-content;
+                padding: 20px;
+            }
+
+            .header {
+            display: inline-block;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            text-align-last: center;
+            background-color: #151A2D;
+            }
+
+            .header h2 {
+                font-size: 2rem;
+                color: white;
+                border-bottom:1px solid gold;
+            }
+
+
+            .new-task-btn {
+          padding: 7px 10px;
+          background-color: rgba(255, 216, 0,0.9);;
+          color: white;
+          border: 1px solid gold;
+          border-radius: 5px;
+          font-size: 1.1rem;
+          cursor: pointer;
+          display: flex;
+          place-self: center;
+          transition: background-color 0.3s;
+            }
+
+            .new-task-btn:hover {
+                background-color: #0056b3;
+            }
+
+            .task-card {
+                border-radius: 10px;
+                margin: 15px 0;
+                padding: 20px;
+                background-color: #ffffff;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                cursor: pointer;
+
+                transition: transform 0.2s;
+                position: relative; /* For positioning child elements */
+            }
+
+            .task-card:hover {
+                transform: scale(1.02);
+            }
+
+            .task-card h3 {
+                font-size: 1.2rem;
+                color: midnightblue;
+                margin: 0;
+            }
+
+            .task-card p {
+                font-size: 1rem;
+                color: midnightblue;
+            }
+            .cardcompletedby{
+            color:midnightblue;
+            }
+            .cardduedate{
+            color:darkred;
+            }
+            .task-details {
+          /* position: absolute; */
+          bottom: 10px;
+          left: 20px;
+          right: 20px;
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.9rem;
+          margin-top: 7%;
+          color: #777;
+            }
+
+            .task-actions {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 15px;
+            }
+
+            .task-actions button {
+                padding: 10px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+
+            .complete-btn {
+                background-color: #28a745;
+                color: white;
+            }
+
+            .complete-btn:hover {
+                background-color: #218838;
+            }
+
+            .delete-btn {
+                background-color: #dc3545;
+                color: white;
+            }
+
+            .delete-btn:hover {
+                background-color: #c82333;
+            }
+
+            .detail-view {
+                flex: 1; /* Take the remaining space */
+                padding: 20px;
+                color:midnightblue;
+                background-color: #fff;
+                display: none; /* Hide by default */
+                overflow-y: auto;
+            }
+            .taskDescription{
+                margin-top: 5%;
+                font-size:1.2rem;
+                color: midnightblue;
+                border-bottom:2px solid gold;
+                }
+            .detail-view h2 {
+                margin-top: 3;
+                padding:1%;
+                color: midnightblue;
+                border-bottom:2px solid gold;
+            }
+
+            #detailDescription {
+                margin: 1% 1%;
+                font-size:1.2rem;
+                padding:1%;
+
+            }
+
+            .close-btn {
+                background-color: transparent;
+                border: none;
+                font-size: 1.5rem;
+                cursor: pointer;
+                position: absolute;
+                top: 10px;
+                right: 10px;
+            }
+
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal {
+            background: linear-gradient(to bottom right, #ffffff, #f0f9ff);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            color: #333;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        select.form-control {
+            background-color: white;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 8px 24px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-cancel {
+            background: none;
+            color: #666;
+        }
+
+        .btn-save {
+            background-color: goldenrod;
+            color: white;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
+        }
+
+        /* Trigger button styles */
+        .add-task-btn {
+            padding: 10px 20px;
+            background-color: #2dd4bf;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+         .file-upload-container {
+            border: 2px dashed #ccc;
+            border-radius: 6px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .file-upload-container.dragover {
+            background-color: #f0f0f0;
+        }
+
+        .file-upload-input {
+            display: none;
+        }
+
+        .file-upload-label {
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            font-style: italic;
+        }
+
+    .file-preview {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.file-preview img {
+    width: 64px;
+    height: 64px;
+    border-radius: 8px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.file-preview .file-icon {
+    font-size: 64px;
+    color: #666;
+    cursor: pointer;
+}
+
+.file-preview .file-icon.pdf {
+    color: #ff0000; /* Red for PDF */
+}
+
+.file-preview .file-icon.word {
+    color: #2b579a; /* Blue for Word */
+}
+
+.file-preview .file-icon.image {
+    color: #4caf50; /* Green for images */
+}
+
+ .task-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+        margin-top: 1%;
+
+    width: 100%;
+}
+
+.numberOfSubmissions, .DueDateDiv {
+    margin: 0;
+    font-size: 1.17em;
+}
+
+.DueDateDiv {
+    color: darkred;
+    margin-left: auto; /* Pushes it to the right */
+}
+
+
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/sidebar :: sidebar}"></div>
+
+<div class="container">
+    <div class="header">
+        <h2>All Tasks</h2>
+    </div>
+    <button class="new-task-btn" onclick="openModal()">
+        <span class="nav-icon material-symbols-rounded">
+            add_task
+        </span>
+        Create Task
+    </button>
+
+    <!-- Task Cards -->
+    <div th:if="${tasks != null and not #lists.isEmpty(tasks)}">
+        <div th:each="task : ${tasks}" class="task-card"
+             th:attr="data-description=${task.taskDescription},
+              data-total-participants=${task.getTotalProjectsCount()},
+              data-completed-by=${task.getCompletedTasksCount()},
+              data-attached-file-path=${task.attachedFilePath != null ? task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1) : ''},
+              data-attached-file-name=${task.attachedFilePath != null ? task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1) : ''}">
+            <h3 th:text="${task.taskName}">Task Name</h3>
+            <div class="task-details">
+        <span class="cardcompletedby">
+            <h4>Completed By:</h4>
+            <h2 th:text="${task.getCompletedTasksCount()} + '/' + ${task.getTotalProjectsCount()}">0/0</h2>
+        </span>
+                <span class="cardduedate">
+            <h4>Due:</h4>
+            <span th:text="${task.dueDate}">Due Date</span>
+        </span>
+            </div>
+        </div>
+    </div>
+    <div th:if="${tasks == null or #lists.isEmpty(tasks)}">
+        <p>No tasks available.</p>
+    </div>
+</div>
+<!-- Detail View --><!-- Detail View -->
+<div class="detail-view" id="detailView">
+    <button class="close-btn" onclick="closeDetailView()">×</button>
+    <h2 id="detailTitle"></h2>
+    <div id="attachedFileSection" style="border-bottom:2px solid gold">
+
+    <h3 class="taskDescription"><span class="nav-icon material-symbols-rounded">description</span> Task Description</h3>
+    <p id="detailDescription"></p>
+    <div id="attachedFilePreview" class="file-preview">
+        <!-- Thumbnail or icon will be dynamically inserted here -->
+    </div>
+    <!-- Add this section for the attached file -->
+
+    </div>
+<div class="task-info">
+    <p class="numberOfSubmissions">
+        <strong>Task Submitted by:&nbsp;</strong>
+        <span id="completedCount"></span> /
+        <span id="totalProjects"></span>
+    </p>
+    <p class="DueDateDiv">
+        <strong>Due Date: &nbsp;</strong>
+        <span id="dueDatee"></span>
+    </p>
+</div>
+    <div class="task-actions">
+        <button class="complete-btn" onclick="completeTask()">Complete</button>
+        <button class="delete-btn" onclick="deleteTask()">Delete</button>
+    </div>
+</div>
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h3 class="modal-title">Add New Task</h3>
+            <button class="close-button" onclick="closeModal()">&times;</button>
+        </div>
+        <form th:action="@{/instructors/createTask}" method="post" id="taskForm" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input th:name="taskName" type="text" name="taskName" id="title" class="form-control" placeholder="Enter task title" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea th:name="taskDescription" name="taskDescription" id="description" class="form-control" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="dueDate">Due Date</label>
+                <input th:name="dueDate" type="date" name="dueDate" id="dueDate" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <div id="fileUploadContainer" class="file-upload-container">
+                    <label for="fileUpload" class="file-upload-label">
+                        Drag and drop a file here or click to select
+                    </label>
+                    <input type="file" id="fileUpload" name="file" class="file-upload-input" accept=".doc,.docx,.pdf">
+                    <div id="fileName" class="file-name"></div>
+                </div>
+                <span th:if="${#authentication}" th:text="${#authentication.name}"></span>
+
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn btn-save">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const taskCards = document.querySelectorAll('.task-card');
+        const detailView = document.getElementById('detailView');
+        const taskForm = document.getElementById('taskForm');
+        const fileUploadContainer = document.getElementById('fileUploadContainer');
+        const fileUploadInput = document.getElementById('fileUpload');
+        const fileNameDisplay = document.getElementById('fileName');
+
+        // Add event listeners to task cards
+      taskCards.forEach(card => {
+    card.addEventListener('click', function() {
+        const title = this.querySelector('h3').textContent;
+        const description = this.getAttribute('data-description');
+        const totalParticipants = this.getAttribute('data-total-participants');
+        const completedBy = this.getAttribute('data-completed-by');
+        const dueDate = this.querySelector('.cardduedate span').textContent;
+        const attachedFilePath = this.getAttribute('data-attached-file-path'); // Add this attribute
+        const attachedFileName = this.getAttribute('data-attached-file-name'); // Add this attribute
+
+        openDetailView(title, description, totalParticipants, completedBy, dueDate, attachedFilePath, attachedFileName);
+    });
+});
+function openDetailView(title, description, totalParticipants, completedBy, dueDate, attachedFilePath, attachedFileName) {
+    document.getElementById('detailTitle').textContent = title;
+    document.getElementById('detailDescription').textContent = description;
+    document.getElementById('completedCount').textContent = completedBy;
+    document.getElementById('totalProjects').textContent = totalParticipants;
+    document.getElementById('dueDatee').textContent = dueDate;
+
+    // Update the attached file section
+    const attachedFilePreview = document.getElementById('attachedFilePreview');
+    attachedFilePreview.innerHTML = ''; // Clear previous content
+
+    if (attachedFilePath) {
+        // Extract the file name from the path
+        const fileName = attachedFilePath.substring(attachedFilePath.lastIndexOf('/') + 1);
+
+        // Encode the file name to make it URL-friendly
+        const encodedFileName = encodeURIComponent(fileName);
+
+        // Construct the download URL
+        const downloadUrl = `/download/${encodedFileName}`;
+
+        // Determine the file type
+        const fileExtension = fileName.split('.').pop().toLowerCase();
+        let previewContent;
+
+        if (fileExtension.match(/(jpg|jpeg|png|gif)$/)) {
+            // Display a thumbnail for images
+            previewContent = `<img src="${downloadUrl}" alt="${fileName}" onclick="window.open('${downloadUrl}', '_blank')">`;
+        } else if (fileExtension === 'pdf') {
+            // Display an icon for PDFs
+            previewContent = `<span class="material-symbols-rounded file-icon pdf" onclick="window.open('${downloadUrl}', '_blank')">description</span>`;
+        } else if (fileExtension.match(/(doc|docx)$/)) {
+            // Display an icon for Word documents
+            previewContent = `<span class="material-symbols-rounded file-icon word" onclick="window.open('${downloadUrl}', '_blank')">description</span>`;
+        } else {
+            // Display a default icon for other file types
+            previewContent = `<span class="material-symbols-rounded file-icon" onclick="window.open('${downloadUrl}', '_blank')">insert_drive_file</span>`;
+        }
+
+        // Insert the preview content
+        attachedFilePreview.innerHTML = previewContent;
+        document.getElementById('attachedFileSection').style.display = 'block'; // Show the section
+    } else {
+        document.getElementById('attachedFileSection').style.display = 'none'; // Hide the section if no file is attached
+    }
+
+    detailView.style.display = 'block';
+}
+function downloadFile() {
+    const attachedFileLink = document.getElementById('attachedFileLink');
+    const downloadUrl = attachedFileLink.href.replace("/download/", "/download-attachment/"); // Use a different endpoint for download
+    window.location.href = downloadUrl;
+}
+        // Function to close detail view
+        window.closeDetailView = function() {
+            detailView.style.display = 'none';
+        }
+
+        // Function to open modal
+        window.openModal = function() {
+            document.getElementById('modalOverlay').style.display = 'flex';
+        }
+
+        // Function to close modal
+        window.closeModal = function() {
+            document.getElementById('modalOverlay').style.display = 'none';
+        }['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileUploadContainer.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileUploadContainer.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileUploadContainer.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            fileUploadContainer.classList.add('dragover');
+        }
+
+        function unhighlight() {
+            fileUploadContainer.classList.remove('dragover');
+        }
+
+        fileUploadContainer.addEventListener('drop', handleDrop, false);
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileUploadInput.files = files;
+            updateFileName();
+        }
+
+        fileUploadInput.addEventListener('change', updateFileName);
+
+        function updateFileName() {
+            const file = fileUploadInput.files[0];
+            if (file) {
+                fileNameDisplay.textContent = `Selected file: ${file.name}`;
+            } else {
+                fileNameDisplay.textContent = '';
+            }
+        }
+
+        // Handle form submission
+        taskForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            fetch(this.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Task created successfully!');
+                    closeModal();
+                    location.reload();
+                } else {
+                    alert('Error creating task. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while creating the task.');
+            });
+        });
+    });
+
+</script>
+</html>
+

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/static/css/sidebar.css">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=chat"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=swipe_right" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Drag and Drop</title>
+    <style>
+        /* General Styles */
+        body {
+          font-family: Arial, sans-serif;
+          margin: 0;
+          padding: 0;
+          background-color: #f4f7fb;
+        }
+
+        .container {
+          display: flex;
+          justify-content: space-between;
+          padding: 20px;
+          margin-left:14%
+        }
+
+        /* Left section with all projects */
+        .left-section {
+          width: 30%;
+          min-height: 500px;
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          padding: 20px;
+          overflow-y: auto;
+        }
+
+        .left-section h2 {
+          text-align: center;
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+
+        .project-card {
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          padding: 20px;
+          margin: 15px;
+          width: 80%;
+          height: 150px;
+          transition: transform 0.2s, box-shadow 0.2s;
+          cursor: move;
+        }
+
+        .project-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-header {
+          border-bottom: 1px solid #eaeaea;
+          margin-bottom: 15px;
+        }
+
+        .project-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+
+        .project-subtitle {
+          font-size: 0.9rem;
+          color: #666;
+        }
+
+        .progress-container {
+          background-color: #e0e0e0;
+          border-radius: 10px;
+          height: 8px;
+          overflow: hidden;
+          margin: 15px 0;
+        }
+
+        .progress-bar {
+          background-color: #4caf50;
+          height: 100%;
+          border-radius: 10px;
+        }
+
+        .members {
+          display: flex;
+          gap: 5px;
+        }
+
+        .member-avatar {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          border: 2px solid #fff;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Drag-and-drop sections */
+        .section {
+          width: 30%;
+          min-height: 500px;
+          background-color: #fff;
+          border-radius: 10px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          padding: 20px;
+          overflow-y: auto;
+          margin-left: 20px;
+        }
+
+        .section h2 {
+          text-align: center;
+          font-size: 1.5rem;
+          margin-bottom: 20px;
+        }
+
+        .section {
+          border: 2px dashed #ddd;
+        }
+
+    </style>
+</head>
+<body>
+<aside class="sidebar">
+    <!-- Sidebar header -->
+    <header class="sidebar-header">
+        <a href="#" class="header-logo">
+            <img src="/static/images/Logo5-removebg.png" alt="MUCPMS">
+        </a>
+
+        <!-- User Info Section -->
+        <div class="user-info">
+            <hr class="divider">
+            <div class="user-details">
+                <img src="/static/images/Dr.fatima-abdallah.jpg" alt="User Avatar" class="user-avatar">
+                <span class="user-name">John Doe</span>
+            </div>
+            <hr class="divider">
+        </div>
+        <button class="toggler menu-toggler">
+            <span class="material-symbols-rounded">menu</span>
+        </button>
+    </header>
+
+    <nav class="sidebar-nav">
+        <!-- Primary top nav -->
+        <ul class="nav-list primary-nav">
+            <li class="nav-item">
+                <a href="/templates/instructorHome.html" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">dashboard</span>
+                    <span class="nav-label">Home</span>
+                </a>
+                <span class="nav-tooltip">Dashboard</span>
+            </li>
+            <li class="nav-item">
+                <a href="/templates/instructorProjects.html" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">calendar_today</span>
+                    <span class="nav-label">My Projects</span>
+                </a>
+                <span class="nav-tooltip">Calendar</span>
+            </li>
+            <li class="nav-item">
+                <a href="/templates/instructorProjects.html" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">swipe_right</span>
+                    <span class="nav-label">Projects Progress </span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">notifications</span>
+                    <span class="nav-label">Notifications</span>
+                </a>
+                <span class="nav-tooltip">Notifications</span>
+            </li>
+            <li class="nav-item">
+                <a href="/templates/projectIdeas.html" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">group</span>
+                    <span class="nav-label">Project Ideas</span>
+                </a>
+                <span class="nav-tooltip">Team</span>
+            </li>
+
+
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">chat</span>
+
+                    Chats
+                </a>
+            </li>
+        </ul>
+
+        <!-- Secondary bottom nav -->
+        <ul class="nav-list secondary-nav">
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">account_circle</span>
+                    <span class="nav-label">Profile</span>
+                </a>
+                <span class="nav-tooltip">Profile</span>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <span class="nav-icon material-symbols-rounded">logout</span>
+                    <span class="nav-label">Logout</span>
+                </a>
+                <span class="nav-tooltip">Logout</span>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<div class="container">
+
+    <!-- Left Section: All Projects -->
+    <div class="left-section" id="projectsSection">
+        <h2>All Projects</h2>
+        <div class="project-card" draggable="true" ondragstart="drag(event)" id="project1">
+            <div class="card-header">
+                <div class="project-title">Project 1</div>
+            </div>
+
+            <div class="members">
+                <img src="avatar1.jpg" class="member-avatar" alt="Member 1">Nader zalzaly
+                <img src="avatar2.jpg" class="member-avatar" alt="Member 2">mhmd jaafar atwi
+            </div>
+        </div>
+        <div class="project-card" draggable="true" ondragstart="drag(event)" id="project2">
+            <div class="card-header">
+                <div class="project-title">Project 2</div>
+                <div class="project-subtitle">Subtitle of Project 2</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 75%;"></div>
+            </div>
+            <div class="members">
+                <img src="avatar1.jpg" class="member-avatar" alt="Member 1">
+            </div>
+        </div>
+        <div class="project-card" draggable="true" ondragstart="drag(event)" id="project">
+            <div class="card-header">
+                <div class="project-title">Project 3</div>
+                <div class="project-subtitle">Subtitle of Project 3</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 25%;"></div>
+            </div>
+            <div class="members">
+                <img src="avatar2.jpg" class="member-avatar" alt="Member 2">
+            </div>
+        </div>
+        <div class="project-card" draggable="true" ondragstart="drag(event)" id="project4">
+            <div class="card-header">
+                <div class="project-title">Project 3</div>
+                <div class="project-subtitle">Subtitle of Project 3</div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 25%;"></div>
+            </div>
+            <div class="members">
+                <img src="avatar2.jpg" class="member-avatar" alt="Member 2">
+            </div>
+        </div><div class="project-card" draggable="true" ondragstart="drag(event)" id="project3">
+        <div class="card-header">
+            <div class="project-title">Project 3</div>
+            <div class="project-subtitle">Subtitle of Project 3</div>
+        </div>
+        <div class="progress-container">
+            <div class="progress-bar" style="width: 25%;"></div>
+        </div>
+        <div class="members">
+            <img src="avatar2.jpg" class="member-avatar" alt="Member 2">
+        </div>
+    </div>
+    </div>
+
+    <!-- Right Section: Drag-and-Drop Categories -->
+    <div class="section" id="lateProjectsSection" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>Late Projects</h2>
+    </div>
+    <div class="section" id="onProgressProjectsSection" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>On Progress</h2>
+    </div>
+    <div class="section" id="almostCompletedProjectsSection" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>Almost Completed Projects</h2>
+    </div>
+    <div class="section" id="completedProjectsSection" ondrop="drop(event)" ondragover="allowDrop(event)">
+        <h2>Completed Projects</h2>
+    </div>
+</div>
+
+<script>
+    // Allow Drop
+    function allowDrop(event) {
+      event.preventDefault();
+    }
+
+    // Drag
+    function drag(event) {
+      event.dataTransfer.setData("text", event.target.id);
+    }
+
+    // Drop
+    function drop(event) {
+      event.preventDefault();
+      var data = event.dataTransfer.getData("text");
+      var draggedElement = document.getElementById(data);
+
+      // Append the dragged project to the new section
+      event.target.appendChild(draggedElement);
+    }
+</script>
+</body>
+</html>

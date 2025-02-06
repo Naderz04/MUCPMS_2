@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <title>Student task details</title>
+</head>
+<style>
+
+    *, *:after, *:before {
+	box-sizing: border-box;
+}
+
+:root {
+	--c-action-primary: #2e44ff;
+	--c-action-primary-accent: #e9e5ff;
+	--c-action-secondary: #e5e5e5;
+	--c-text-primary: #0d0f21;
+	--c-text-secondary: #6a6b76;
+	--c-background-primary: #d0d1de;
+}
+
+body {
+	font-family: "Inter", sans-serif;
+	color: var(--c-text-primary);
+	background-color: var(--c-background-primary);
+	line-height: 1.5;
+}
+
+input, button, select, textarea {
+	font: inherit;
+}
+
+.modal {
+	width: 90%;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10vh;
+	margin-bottom: 10vh;
+	background-color: #FFF;
+	border-radius: .5rem;
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modal-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding: 1.5rem 1.5rem 1rem;
+}
+
+.logo-circle {
+	width: 3.5rem;
+	height: 3.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	background-color: var(--c-action-primary-accent);
+	svg {
+		max-width: 1.5rem;
+	}
+}
+
+.btn-close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: .25rem;
+	border: none;
+	background-color: transparent;
+	&:hover, &:focus {
+		background-color: var(--c-action-primary-accent);
+	}
+}
+
+.modal-body {
+	padding: 1rem 1.5rem;
+}
+
+.modal-title {
+	font-weight: 700;
+}
+
+.modal-description {
+	color: var(--c-text-secondary);
+}
+
+.upload-area {
+	margin-top: 1.25rem;
+	border: none;
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23ccc' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	background-color: transparent;
+	padding: 3rem;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&:hover, &:focus {
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%232e44ff' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	}
+}
+
+.upload-area-icon {
+	display: block;
+	width: 2.25rem;
+	height: 2.25rem;
+	svg {
+		max-height: 100%;
+		max-width: 100%;
+	}
+}
+
+.upload-area-title {
+	margin-top: 1rem;
+	display: block;
+	font-weight: 700;
+		color: var(--c-text-primary);
+}
+
+.upload-area-description {
+		display: block;
+		color: var(--c-text-secondary);
+	strong {
+		color: var(--c-action-primary);
+		font-weight: 700;
+	}
+}
+
+.modal-footer {
+	padding: 1rem 1.5rem 1.5rem;
+	display: flex;
+	justify-content: flex-end;
+	[class*="btn-"] {
+		margin-left: .75rem;
+	}
+}
+
+.btn-secondary, .btn-primary {
+	padding: .5rem 1rem;
+	font-weight: 500;
+	border: 2px solid var(--c-action-secondary);
+	border-radius: .25rem;
+	background-color: transparent;
+}
+
+.btn-primary {
+	color: #FFF;
+	background-color: var(--c-action-primary);
+	border-color: var(--c-action-primary);
+}
+</style>
+<body>
+<div class="modal">
+    <div class="modal-header">
+        <div class="modal-logo">
+			<span class="logo-circle">
+				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="512" height="419.116" viewBox="0 0 512 419.116">
+					<defs>
+						<clipPath id="clip-folder-new">
+							<rect width="512" height="419.116" />
+						</clipPath>
+					</defs>
+					<g id="folder-new" clip-path="url(#clip-folder-new)">
+						<path id="Union_1" data-name="Union 1" d="M16.991,419.116A16.989,16.989,0,0,1,0,402.125V16.991A16.989,16.989,0,0,1,16.991,0H146.124a17,17,0,0,1,10.342,3.513L227.217,57.77H437.805A16.989,16.989,0,0,1,454.8,74.761v53.244h40.213A16.992,16.992,0,0,1,511.6,148.657L454.966,405.222a17,17,0,0,1-16.6,13.332H410.053v.562ZM63.06,384.573H424.722L473.86,161.988H112.2Z" fill="var(--c-action-primary)" stroke="" stroke-width="1" />
+					</g>
+				</svg>
+			</span>
+        </div>
+        <button class="btn-close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" d="M0 0h24v24H0V0z"/><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z" fill="var(--c-text-secondary)"/></svg>
+        </button>
+    </div>
+    <div class="modal-body">
+        <h2 class="modal-title">Upload a file</h2>
+        <p class="modal-description">Attach the file below</p>
+        <button class="upload-area">
+			<span class="upload-area-icon">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="340.531" height="419.116" viewBox="0 0 340.531 419.116">
+  <g id="files-new" clip-path="url(#clip-files-new)">
+    <path id="Union_2" data-name="Union 2" d="M-2904.708-8.885A39.292,39.292,0,0,1-2944-48.177V-388.708A39.292,39.292,0,0,1-2904.708-428h209.558a13.1,13.1,0,0,1,9.3,3.8l78.584,78.584a13.1,13.1,0,0,1,3.8,9.3V-48.177a39.292,39.292,0,0,1-39.292,39.292Zm-13.1-379.823V-48.177a13.1,13.1,0,0,0,13.1,13.1h261.947a13.1,13.1,0,0,0,13.1-13.1V-323.221h-52.39a26.2,26.2,0,0,1-26.194-26.195v-52.39h-196.46A13.1,13.1,0,0,0-2917.805-388.708Zm146.5,241.621a14.269,14.269,0,0,1-7.883-12.758v-19.113h-68.841c-7.869,0-7.87-47.619,0-47.619h68.842v-18.8a14.271,14.271,0,0,1,7.882-12.758,14.239,14.239,0,0,1,14.925,1.354l57.019,42.764c.242.185.328.485.555.671a13.9,13.9,0,0,1,2.751,3.292,14.57,14.57,0,0,1,.984,1.454,14.114,14.114,0,0,1,1.411,5.987,14.006,14.006,0,0,1-1.411,5.973,14.653,14.653,0,0,1-.984,1.468,13.9,13.9,0,0,1-2.751,3.293c-.228.2-.313.485-.555.671l-57.019,42.764a14.26,14.26,0,0,1-8.558,2.847A14.326,14.326,0,0,1-2771.3-147.087Z" transform="translate(2944 428)" fill="var(--c-action-primary)"/>
+  </g>
+</svg>
+			</span>
+            <span class="upload-area-title">Drag file(s) here to upload.</span>
+            <span class="upload-area-description">
+				Alternatively, you can select a file by <br/><strong>clicking here</strong>
+			</span>
+        </button>
+    </div>
+    <div class="modal-footer">
+        <button class="btn-secondary">Cancel</button>
+        <button class="btn-primary">Upload File</button>
+    </div>
+</div>
+</body>
+</html>
+<div class="tasks">
+    <div class="task-section" id="assigned">
+        <h2>Assigned Tasks</h2>
+        <div class="task" th:each="task : ${assignedTasks}" th:attr="data-attached-file-path=${task.attachedFilePath}">
+            <div class="taskHeader">
+                <h2 th:text="${task.taskName}">Task Name</h2>
+                <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+            </div>
+            <!-- Add the hidden class here -->
+            <div class="assignment-content hidden">
+                <p th:text="${task.taskDescription}">Description</p>
+                <div class="attachment">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
+                    <div class="attachment-info">
+                        <div class="filename">
+                            <p th:text="${task.attachedFilePath}">Description</p>
+                        </div>
+                        <div class="filetype">Word</div>
+                    </div>
+                </div>
+                <div class="work-status">
+                    <button class="add-work">Add File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="task-section hidden" id="missing">
+        <h2>Missing Tasks</h2>
+
+        <div class="task" th:each="task : ${missingTasks}" th:attr="data-attached-file-path=${task.attachedFilePath}">
+            <div class="taskHeader">
+                <h2 th:text="${task.taskName}">Task Name</h2>
+                <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+            </div>
+            <!-- Add the hidden class here -->
+            <div class="assignment-content hidden">
+                <p th:text="${task.taskDescription}">Description</p>
+                <div class="attachment">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
+                    <div class="attachment-info">
+                        <div class="filename">
+                            <p th:text="${task.attachedFilePath}">Description</p>
+                        </div>
+                        <div class="filetype">Word</div>
+                    </div>
+                </div>
+                <div class="work-status">
+                    <button class="add-work">Add File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="task-section hidden" id="done">
+        <h2>Completed Tasks</h2>
+        <div class="task" th:each="task : ${doneTasks}" th:attr="data-attached-file-path=${task.attachedFilePath}">
+            <div class="taskHeader">
+                <h2 th:text="${task.taskName}">Task Name</h2>
+                <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+            </div>
+            <!-- Add the hidden class here -->
+            <div class="assignment-content hidden">
+                <p th:text="${task.taskDescription}">Description</p>
+                <div class="attachment">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
+                    <div class="attachment-info">
+                        <div class="filename">
+                            <p th:text="${task.attachedFilePath}">Description</p>
+                        </div>
+                        <div class="filetype">Word</div>
+                    </div>
+                </div>
+                <div class="work-status">
+                    <button class="add-work">Add File</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<template id="modal-template">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="modal-logo">
+                    <span class="logo-circle">
+                        <!-- SVG content -->
+                    </span>
+            </div>
+            <button class="btn-close">
+                <!-- SVG content -->
+            </button>
+        </div>
+        <div class="modal-body">
+            <h2 class="modal-title">Upload a file</h2>
+            <p class="modal-description">Attach the file below</p>
+            <button class="upload-area">
+                    <span class="upload-area-icon">
+                        <!-- SVG content -->
+                    </span>
+                <span class="upload-area-title">Drag file(s) here to upload.</span>
+                <span class="upload-area-description">
+                        Alternatively, you can select a file by <br/><strong>clicking here</strong>
+                    </span>
+            </button>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary">Cancel</button>
+            <button class="btn-primary">Upload File</button>
+        </div>
+    </div>
+</template>
+<script>
+    // Select all tabs and task sections
+    const tabs = document.querySelectorAll(".tab");
+    const taskSections = document.querySelectorAll(".task-section");
+
+    // Add click event to each tab
+    tabs.forEach(tab => {
+      tab.addEventListener("click", () => {
+        // Remove active class from all tabs
+        tabs.forEach(t => t.classList.remove("active"));
+        // Hide all task sections
+        taskSections.forEach(section => section.classList.add("hidden"));
+
+        // Set the clicked tab as active
+        tab.classList.add("active");
+
+        // Show the corresponding task section
+        const sectionId = tab.dataset.section;
+        document.getElementById(sectionId).classList.remove("hidden");
+      });
+    });
+
+
+
+    // Handle file selection
+    const fileInput = document.getElementById('fileInput');
+    const uploadedFilesContainer = document.getElementById('uploadedFiles');
+
+    if (fileInput && uploadedFilesContainer) {
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          // Show the uploaded files container
+          uploadedFilesContainer.classList.remove('hidden');
+
+          // Create uploaded file element
+          const uploadedFile = document.createElement('div');
+          uploadedFile.className = 'uploaded-file';
+
+          // Format file size
+          const fileSize = formatFileSize(file.size);
+
+          uploadedFile.innerHTML = `
+            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="File" class="file-icon">
+            <div class="file-info">
+              <div class="file-name">${file.name}</div>
+              <div class="file-size">${fileSize}</div>
+            </div>
+            <button class="remove-file" onclick="removeFile(this)">
+              <span class="material-symbols-rounded">close</span>
+            </button>
+          `;
+
+          // Add click handler to show full file
+          uploadedFile.addEventListener('click', (e) => {
+            if (!e.target.closest('.remove-file')) {
+              // Here you would typically show a modal or preview of the file
+              alert('Opening file: ' + file.name);
+            }
+          });
+
+          // Clear existing files and add the new one
+          uploadedFilesContainer.innerHTML = '';
+          uploadedFilesContainer.appendChild(uploadedFile);
+        }
+      });
+    }
+
+    // Helper function to format file size
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Remove file handler
+    function removeFile(button) {
+      const fileElement = button.closest('.uploaded-file');
+      fileElement.remove();
+      fileInput.value = ''; // Clear the file input
+
+      // Hide the container if no files
+      if (uploadedFilesContainer.children.length === 0) {
+        uploadedFilesContainer.classList.add('hidden');
+      }
+    }
+
+    // Add click event to add-m-btn
+    document.querySelectorAll('.add-m-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        alert('Add Task clicked!');
+      });
+    });
+
+
+
+
+
+     document.addEventListener('DOMContentLoaded', function() {
+       const tasks = document.querySelectorAll('.task');
+
+       tasks.forEach(task => {
+         task.addEventListener('click', function() {
+           // Toggle the visibility of the task details
+           const assignmentContent = task.querySelector('.assignment-content');
+           const details = task.querySelector('.details');
+
+           if (assignmentContent) {
+             assignmentContent.classList.toggle('hidden');
+           }
+           if (details) {
+             details.classList.toggle('hidden');
+           }
+
+           // Handle attached file preview
+           const attachedFilePath = task.getAttribute('data-attached-file-path');
+           const attachmentInfo = task.querySelector('.attachment-info');
+
+           if (attachedFilePath && attachmentInfo) {
+             const fileName = attachedFilePath.substring(attachedFilePath.lastIndexOf('/') + 1);
+             const encodedFileName = encodeURIComponent(fileName);
+             const downloadUrl = `/download/${encodedFileName}`;
+
+             // Determine the file type
+             const fileExtension = fileName.split('.').pop().toLowerCase();
+             let previewContent;
+
+             if (fileExtension.match(/(jpg|jpeg|png|gif)$/)) {
+               // Display a thumbnail for images
+               previewContent = `<img src="${downloadUrl}" alt="${fileName}" onclick="window.open('${downloadUrl}', '_blank')">`;
+             } else if (fileExtension === 'pdf') {
+               // Display an icon for PDFs
+               previewContent = `<span class="material-symbols-rounded file-icon pdf" onclick="window.open('${downloadUrl}', '_blank')">description</span>`;
+             } else if (fileExtension.match(/(doc|docx)$/)) {
+               // Display an icon for Word documents
+               previewContent = `<span class="material-symbols-rounded file-icon word" onclick="window.open('${downloadUrl}', '_blank')">description</span>`;
+             } else {
+               // Display a default icon for other file types
+               previewContent = `<span class="material-symbols-rounded file-icon" onclick="window.open('${downloadUrl}', '_blank')">insert_drive_file</span>`;
+             }
+
+             // Update the attachment info with the preview content
+             attachmentInfo.innerHTML = `
+               <div class="filename">${fileName}</div>
+               <div class="filetype">${fileExtension.toUpperCase()}</div>
+               ${previewContent}
+             `;
+           }
+         });
+       });
+     });
+    document.addEventListener("DOMContentLoaded", function () {
+      const addWorkButtons = document.querySelectorAll(".add-work");
+      const modal = document.querySelector(".modal");
+      const closeModal = document.querySelector(".btn-close");
+
+      addWorkButtons.forEach(button => {
+          button.addEventListener("click", function () {
+              modal.style.display = "block"; // Show the modal
+          });
+      });
+
+      closeModal.addEventListener("click", function () {
+          modal.style.display = "none"; // Hide the modal
+      });
+
+      window.addEventListener("click", function (event) {
+          if (event.target === modal) {
+              modal.style.display = "none"; // Hide modal when clicking outside
+          }
+      });
+  });
+
+       document.addEventListener('DOMContentLoaded', function() {
+              const addWorkButtons = document.querySelectorAll('.add-work');
+              const modalTemplate = document.getElementById('modal-template');
+              const modalContent = modalTemplate.content.cloneNode(true);
+
+              addWorkButtons.forEach(button => {
+                  button.addEventListener('click', function() {
+                      // Append the modal to the body
+                      document.body.appendChild(modalContent);
+
+                      // Close modal when the close button is clicked
+                      const closeButton = document.querySelector('.btn-close');
+                      closeButton.addEventListener('click', function() {
+                          document.body.removeChild(document.querySelector('.modal'));
+                      });
+
+                      // Close modal when the cancel button is clicked
+                      const cancelButton = document.querySelector('.btn-secondary');
+                      cancelButton.addEventListener('click', function() {
+                          document.body.removeChild(document.querySelector('.modal'));
+                      });
+                  });
+              });
+          });
+</script>
+</body>
+
+</html>

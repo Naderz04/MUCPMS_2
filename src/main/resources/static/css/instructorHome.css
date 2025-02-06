@@ -1,0 +1,214 @@
+/* Importing Google Fonts - Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  background: white;
+}
+
+.main-container {
+display:block;
+margin-left:20%
+}
+/* Tasks Table Styling */
+
+.table-container {
+    width: 55%;
+}
+    .table-container h3{
+       margin:3%
+      }
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Remove borders between cells */
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            color: #151A2D;
+            background-color:#f9f9f9
+        }
+        th {
+            background-color: white;
+        }
+        tr:hover {
+            background-color: #f1f1f1; /* Highlight row on hover */
+        }
+
+.table-container,
+.notification-container {
+    display: inline-block;
+    vertical-align: top;
+    margin: 1%;
+    background-color: #f9f9f9;
+    border-radius: 28px;
+    padding: 20px;
+}
+.notification-container {
+    width: 40%;
+}
+        .notification-box {
+          height: 300px;
+          border: 1px solid #ccc;
+          border-radius: 28px;
+          padding: 10px;
+          background-color: #f9f9f9;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          font-family: Arial, sans-serif;
+        }
+
+        /* "No Notification" Message Styling */
+        .no-notification {
+          font-size: 16px;
+          color: #777;
+          text-align:center
+          }
+
+
+.projects-header {
+    display: flex;
+    align-items: center;
+    width:100%;
+    margin-bottom: 20px;
+}
+
+.projects-header h1 {
+    font-size: 1.5rem;
+    font-family:revert;
+    margin: 0;
+}
+
+.search-bar {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+      margin-left: 60px;
+      width: 450px;
+}
+
+/* General Card Styling */
+.projects-section {
+    margin-top: 20px;
+    padding: 20px;
+    height:auto;
+    background-color: #f9f9f9;
+    border-radius: 28px;
+
+    /* Flexbox for layout */
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping of items */
+    justify-content: space-between; /* Add spacing between rows and items */
+    gap: 20px; /* Spacing between cards */
+
+
+}
+
+.projects-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+.project-card {
+  background-color: #fff;
+   border-radius: 10px;
+   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+   padding: 20px;
+   margin: 15px;
+   width: 40%;
+   height:50%;
+   transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Card Header */
+.card-header {
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 15px;
+}
+
+.project-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.project-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+/* Progress Bar */
+.progress-container {
+  background-color: #e0e0e0;
+  border-radius: 10px;
+  height: 8px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-bar {
+  background-color: #4caf50;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.progress-text {
+  font-size: 0.85rem;
+  color: #333;
+}
+
+/* Members Section */
+.members {
+  display: flex;
+  gap: 5px;
+}
+
+.member-avatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer Buttons */
+.card-footer {
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.view-btn {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.add-task-btn {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}

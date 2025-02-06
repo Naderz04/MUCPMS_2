@@ -1,0 +1,59 @@
+
+.navbar {
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+     background-color: #151A2D;
+     padding: 10px 20px;
+     color:white
+ }
+ .navbar a {
+     color: white;
+     text-decoration: none;
+     padding: 14px 20px;
+ }
+ .navbar a:hover {
+     background-color: #575757;
+ }
+ .navbar .logo {
+     font-size: 20px;
+     font-weight: bold;
+ }
+ .navbar-menu {
+     display: flex;
+     align-items: center; /* Align items vertically */
+ }
+ .profile {
+     display: flex;
+     align-items: center; /* Center align image and text */
+
+ }
+ .golden-line {
+     width: 1px; /* Width of the golden line */
+     height: 39px; /* Height of the golden line */
+     background-color: gold; /* Color of the golden line */
+     margin-right: 10px; /* Space between the line and the image */
+ }
+ .profile-img {
+     width: 30px; /* Adjust size as needed */
+     height: 30px; /* Adjust size as needed */
+     border-radius: 50%; /* Make it circular */
+     margin-right: 10px; /* Space between image and name */
+ }
+ @media (max-width: 600px) {
+     .navbar-menu {
+         flex-direction: column;
+         display: none;
+         width: 100%;
+     }
+     .navbar-menu.active {
+         display: flex;
+     }
+     .navbar-toggle {
+         display: block;
+         cursor: pointer;
+     }
+ }
+ .navbar-toggle {
+     display: none;
+ }

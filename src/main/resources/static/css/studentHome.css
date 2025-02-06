@@ -1,0 +1,733 @@
+body {
+    font-family: system-ui;
+      margin: 0;
+      color:midnightblue;
+  padding: 0;
+  background-color: #f7f7f7;
+}
+
+.todo-container {
+  max-width: 100%;
+  margin-left:14%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.tabs {
+  display: flex;
+  border-bottom: 1px solid midnightblue;
+  place-self:center;
+  width:70%;
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem;
+  text-align: center;
+  background: white;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: background 0.3s ease;
+}
+
+.tab.active {
+  background: white;
+  font-weight: bold;
+  border-bottom: 4px solid gold;
+}
+
+.tab:hover {
+  background: #e9ecef;
+}
+
+.tasks {
+  padding: 1rem;
+  margin:auto;
+  width:75%;
+}
+
+.task-section {
+  display: none;
+}
+
+.task-section h2 {
+  margin-bottom: 1rem;
+  color: midnightblue;
+}
+
+.task-section .task {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  background: #f9f9f9;
+  transition: transform 0.2s ease;
+}
+
+.task-section .task:hover {
+  transform: translateY(-2px);
+}
+
+.hidden {
+  display: none;
+}
+
+.task-section:not(.hidden) {
+  display: block;
+}
+.details {
+  padding: 0.5rem;
+  background: #f1f1f1;
+  border-top: 1px solid #ddd;
+  margin-top: 0.5rem;
+  border-radius: 0 0 5px 5px;
+}
+
+.task p{
+font-size:1.3rem;
+color:midnightblue;
+
+}
+
+
+
+.task .add-work {
+  display: block;
+  margin-top: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: gold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  color: midnightblue;
+  transition: background 0.3s ease;
+}
+
+.task .add-work:hover {
+  background: darkgoldenrod;
+}
+
+.task .details.hidden {
+  display: none;
+}
+
+
+/* Add these styles to your existing CSS */
+
+.assignment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.assignment-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.assignment-icon {
+  background: #f4511e;
+  color: white;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 20px;
+}
+
+.task-name {
+  font-size: 24px;
+  color: #3c4043;
+  margin: 0 0 8px 0;
+}
+
+.assignment-meta {
+  color: #5f6368;
+  font-size: 14px;
+}
+
+.points {
+  display: block;
+  margin-top: 4px;
+  color: #3c4043;
+}
+
+
+
+.instructions {
+  margin: 20px 0;
+}
+
+.instructions h3 {
+  color: #3c4043;
+  margin-bottom: 12px;
+}
+
+.instructions ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  color: #3c4043;
+}
+
+.instructions li {
+  margin-bottom: 8px;
+}
+
+.attachment {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  margin: 20px 0;
+  background: #f8f9fa;
+}
+
+.attachment-icon {
+  width: 48px;
+  height: 48px;
+  margin-right: 16px;
+}
+
+.attachment-info {
+  color: #3c4043;
+}
+
+.filename {
+  font-weight: 500;
+}
+
+.filetype {
+  color: #5f6368;
+  font-size: 12px;
+}
+
+.work-status {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.work-status button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.add-work {
+  background: white;
+  border: 1px solid #dadce0;
+  color: #1a73e8;
+}
+
+.mark-done {
+  background: #1a73e8;
+  border: none;
+  color: white;
+}
+
+/* Update your existing .details class */
+.task .details {
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px rgba(60,64,67,0.3);
+  margin-top: 12px;
+}
+.work-status {
+  display: flex;
+  justify-content: center; /* Center the button */
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.add-work {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid #dadce0;
+  color: #1a73e8;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.add-work:hover {
+  background-color: #f8f9fa;
+}
+
+.uploaded-files {
+  margin: 20px 0;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 20px;
+}
+
+.uploaded-file {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  background: #f8f9fa;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.uploaded-file:hover {
+  background: #f1f3f4;
+}
+
+.file-icon {
+  width: 24px;
+  height: 24px;
+  margin-right: 12px;
+}
+
+.file-info {
+  flex: 1;
+}
+
+.file-name {
+  font-size: 14px;
+  color: #3c4043;
+  font-weight: 500;
+}
+
+.file-size {
+  font-size: 12px;
+  color: #5f6368;
+}
+
+.remove-file {
+  color: #5f6368;
+  padding: 4px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-radius: 50%;
+}
+
+.remove-file:hover {
+  background: #e8eaed;
+}
+
+.hidden {
+  display: none;
+}
+
+    *, *:after, *:before {
+	box-sizing: border-box;
+}
+
+:root {
+	--c-action-primary: #2e44ff;
+	--c-action-primary-accent: #e9e5ff;
+	--c-action-secondary: #e5e5e5;
+	--c-text-primary: #0d0f21;
+	--c-text-secondary: #6a6b76;
+	--c-background-primary: #d0d1de;
+}
+
+body {
+	font-family: "Inter", sans-serif;
+	color: var(--c-text-primary);
+	background-color: var(--c-background-primary);
+	line-height: 1.5;
+}
+
+input, button, select, textarea {
+	font: inherit;
+}
+
+.modal {
+	width: 90%;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10vh;
+	margin-bottom: 10vh;
+	background-color: #FFF;
+	border-radius: .5rem;
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modal-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding: 1.5rem 1.5rem 1rem;
+}
+
+.logo-circle {
+	width: 3.5rem;
+	height: 3.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	background-color: var(--c-action-primary-accent);
+	svg {
+		max-width: 1.5rem;
+	}
+}
+
+.btn-close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: .25rem;
+	border: none;
+	background-color: transparent;
+	&:hover, &:focus {
+		background-color: var(--c-action-primary-accent);
+	}
+}
+
+.modal-body {
+	padding: 1rem 1.5rem;
+}
+
+.modal-title {
+	font-weight: 700;
+}
+
+.modal-description {
+	color: var(--c-text-secondary);
+}
+
+.upload-area {
+	margin-top: 1.25rem;
+	border: none;
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23ccc' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	background-color: transparent;
+	padding: 3rem;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&:hover, &:focus {
+			background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%232e44ff' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	}
+}
+
+.upload-area-icon {
+	display: block;
+	width: 2.25rem;
+	height: 2.25rem;
+	svg {
+		max-height: 100%;
+		max-width: 100%;
+	}
+}
+
+.upload-area-title {
+	margin-top: 1rem;
+	display: block;
+	font-weight: 700;
+		color: var(--c-text-primary);
+}
+
+.upload-area-description {
+		display: block;
+		color: var(--c-text-secondary);
+	strong {
+		color: var(--c-action-primary);
+		font-weight: 700;
+	}
+}
+
+.modal-footer {
+	padding: 1rem 1.5rem 1.5rem;
+	display: flex;
+	justify-content: flex-end;
+	[class*="btn-"] {
+		margin-left: .75rem;
+	}
+}
+
+.btn-secondary, .btn-primary {
+	padding: .5rem 1rem;
+	font-weight: 500;
+	border: 2px solid var(--c-action-secondary);
+	border-radius: .25rem;
+	background-color: transparent;
+}
+
+.btn-primary {
+	color: #FFF;
+	background-color: var(--c-action-primary);
+	border-color: var(--c-action-primary);
+}
+
+
+.taskHeader h2 {
+  margin: 0; /* Remove default margin for h2 */
+  font-size: 1.5rem; /* Adjust font size as needed */
+  color: midnightblue; /* Match your design */
+}
+
+.taskHeader .task-duedate {
+  margin: 0; /* Remove default margin for p */
+  font-size: 1.2rem; /* Adjust font size as needed */
+  color: darkred; /* Match your design */
+  text-align: right; /* Align the due date to the right */
+}
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  height: 80px; /* Increase the height as needed */
+}
+
+.task {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  background: #f9f9f9;
+  transition: transform 0.2s ease;
+  min-height: 120px; /* Ensure the task container has a minimum height */
+}
+
+.task:hover {
+  transform: translateY(-2px);
+}
+
+/* Add a smooth transition for the dropdown */
+.assignment-content {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 12px;
+  border-bottom: 2px solid goldenrod;
+  margin-top: 1rem;
+  max-height: 0; /* Start with no height */
+  overflow: hidden; /* Hide overflow content */
+  transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out; /* Smooth transition */
+  opacity: 0; /* Start with 0 opacity */
+}
+
+/* When the dropdown is visible */
+.assignment-content:not(.hidden) {
+  max-height: 550px; /* Adjust based on your content height */
+  opacity: 1; /* Fade in */
+}
+
+/* Add a subtle animation for the dropdown */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.assignment-content:not(.hidden) {
+  animation: slideDown 0.5s ease-in-out; /* Apply the animation */
+}
+
+
+
+input, button, select, textarea {
+	font: inherit;
+}
+
+.modal {
+	width: 90%;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10vh;
+	margin-bottom: 10vh;
+	background-color: #FFF;
+	border-radius: .5rem;
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modal-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding: 1.5rem 1.5rem 1rem;
+}
+
+.logo-circle {
+	width: 3.5rem;
+	height: 3.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	background-color: var(--c-action-primary-accent);
+	svg {
+		max-width: 1.5rem;
+	}
+}
+
+.btn-close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: .25rem;
+	border: none;
+	background-color: transparent;
+	&:hover, &:focus {
+		background-color: var(--c-action-primary-accent);
+	}
+}
+
+.modal-body {
+	padding: 1rem 1.5rem;
+}
+
+.modal-title {
+	font-weight: 700;
+}
+
+.modal-description {
+	color: var(--c-text-secondary);
+}
+
+.upload-area {
+	margin-top: 1.25rem;
+	border: none;
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23ccc' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	background-color: transparent;
+	padding: 3rem;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&:hover, &:focus {
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%232e44ff' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	}
+}
+
+.upload-area-icon {
+	display: block;
+	width: 2.25rem;
+	height: 2.25rem;
+	svg {
+		max-height: 100%;
+		max-width: 100%;
+	}
+}
+
+.upload-area-title {
+	margin-top: 1rem;
+	display: block;
+	font-weight: 700;
+		color: var(--c-text-primary);
+}
+
+.upload-area-description {
+		display: block;
+		color: var(--c-text-secondary);
+	strong {
+		color: var(--c-action-primary);
+		font-weight: 700;
+	}
+}
+
+.modal-footer {
+	padding: 1rem 1.5rem 1.5rem;
+	display: flex;
+	justify-content: flex-end;
+	[class*="btn-"] {
+		margin-left: .75rem;
+	}
+}
+
+.btn-secondary, .btn-primary {
+	padding: .5rem 1rem;
+	font-weight: 500;
+	border: 2px solid var(--c-action-secondary);
+	border-radius: .25rem;
+	background-color: transparent;
+}
+
+.btn-primary {
+	color: #FFF;
+	background-color: var(--c-action-primary);
+	border-color: var(--c-action-primary);
+}
+/* Divider Line */
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: #e5e5e5;
+  margin: 20px 0;
+}
+
+/* Drag-and-Drop Upload Area */
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #2e44ff;
+}
+
+.upload-area-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--c-action-primary);
+}
+
+.upload-area-title {
+  display: block;
+  font-weight: 700;
+  color: var(--c-text-primary);
+  margin-top: 10px;
+}
+
+.upload-area-description {
+  display: block;
+  color: var(--c-text-secondary);
+  margin-top: 5px;
+}
+
+.upload-area-description strong {
+  color: var(--c-action-primary);
+  font-weight: 700;
+}
+
+.btn-submit {
+  background-color: #2e44ff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: #1a2fbf;
+}
