@@ -102,8 +102,11 @@
     </ul>
   </nav>
 </aside>
+<div class="container">
+<h1>Project Ideas</h1>
 
-
+<a th:href="@{/projectIdeas/new}">Create New Project Idea</a>
+</div>
 <table class="styled-table">
   <thead>
   <tr>
@@ -113,23 +116,27 @@
     <th>Suggested By</th>
     <th>Description</th>
     <th>Status</th>
+    <!-- Show Actions column only if the user is an instructor -->
+    <th th:if="${user != null && user.role == 'INSTRUCTOR'}">Actions</th>
   </tr>
   </thead>
   <tbody>
-  <!-- Thymeleaf loop to iterate through project ideas -->
   <tr th:each="projectIdea, iterStat : ${projectIdeas}">
     <td th:text="${iterStat.index + 1}"></td>
     <td th:text="${projectIdea.projectTitle}"></td>
     <td th:text="${projectIdea.type}"></td>
-    <td th:text="${projectIdea.suggestedBy}"></td>
+    <td th:text="${projectIdea.suggestedBy.instructorName}"></td>
     <td th:text="${projectIdea.projectDescription}"></td>
-    <td th:text="${projectIdea.availability}"></td>
+    <!-- Change font color to dark red if availability is "Taken" -->
+    <td th:style="${projectIdea.availability == 'Taken'} ? 'color: darkred;' : ''" th:text="${projectIdea.availability}"></td>
+    <!-- Show Edit/Delete links only if the user is an instructor -->
+    <td th:if="${user != null && user.role == 'INSTRUCTOR'}">
+      <a th:href="@{/projectIdeas/edit/{id}(id=${projectIdea.projectIdeaId})}">Edit</a> |
+      <a th:href="@{/projectIdeas/delete/{id}(id=${projectIdea.projectIdeaId})}" onclick="return confirm('Are you sure you want to delete this project idea?');">Delete</a>
+    </td>
   </tr>
   </tbody>
-</table>
-
-
-</body>
+</table></body>
 
 <!--<script>-->
 <!--  function loadComponent(url, containerId) {-->

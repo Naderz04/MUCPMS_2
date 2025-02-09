@@ -19,6 +19,7 @@ public class User {
     private Role role;
 
     private String name;
+    private String photoPath;  // New field for storing the photo file path
 
     // getters and setters
 
@@ -26,4 +27,7 @@ public class User {
         STUDENT, INSTRUCTOR
     }
 
+    public String getPhotoUrl() {
+        return photoPath != null ? "/uploads/users/" + photoPath : "/default-avatar.png";
+    }
 }

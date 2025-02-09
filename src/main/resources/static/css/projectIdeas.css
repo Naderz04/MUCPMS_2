@@ -2,7 +2,11 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
 }
-
+ .container {
+                margin-left: 13%;
+                height: fit-content;
+                padding: 10px;
+            }
 .styled-table {
     border-collapse: collapse;
     margin: 1% 5% 5% 17%;
@@ -80,4 +84,9 @@ body {
 .styled-table th:nth-child(6),
 .styled-table td:nth-child(6) {
     width: 10%; /* Narrow for status */
+}
+
+.taken-status {
+  color: darkred;
+  font-weight: bold;
 }

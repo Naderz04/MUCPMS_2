@@ -15,11 +15,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -39,45 +42,47 @@ public class ProjectController {
     @Autowired
     private StudentService studentService;
 
+    @Autowired
+    private InstructorService instructorService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<ViewProjectDTO>> createProject(@Valid @RequestBody CreateProjectDTO projectDTO) {
-        try {
-            // Attempt to create the project
-            Project createdProject = studentsProjectsManagementService.createProject(projectDTO);
-
-            // Prepare response DTO
-            List<String> studentIds = createdProject.getStudents().stream()
-                    .map(Student::getStudentEmail)
-                    .collect(Collectors.toList());
-
-            String instructorId = createdProject.getInstructor() != null ? createdProject.getInstructor().getInstructorEmail() : null;
-
-            List<Long> taskIds = createdProject.getTasks().stream()
-                    .map(Task::getTaskId)
-                    .collect(Collectors.toList());
-
-            ViewProjectDTO viewProjectDTO = new ViewProjectDTO(
-                    createdProject.getProjectId(),
-                    createdProject.getProjectIdea(),
-                    createdProject.getProjectDescription(),
-                    studentIds,
-                    instructorId,
-                    taskIds
-            );
-
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ApiResponse<>(true, viewProjectDTO, "Project created successfully", HttpStatus.CREATED.value()));
-        } catch (EntityNotFoundException e) {
-            // Handle missing instructor
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse<>(false, null, e.getMessage(), HttpStatus.NOT_FOUND.value()));
-        } catch (Exception e) {
-            // Handle other errors
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse<>(false, null, "Failed to create Project: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
-    }
+//    @PostMapping
+//    public ResponseEntity<ApiResponse<ViewProjectDTO>> createProject(@Valid @RequestBody CreateProjectDTO projectDTO) {
+//        try {
+//            // Attempt to create the project
+//            Project createdProject = studentsProjectsManagementService.createProject(projectDTO);
+//
+//            // Prepare response DTO
+//            List<String> studentIds = createdProject.getStudents().stream()
+//                    .map(Student::getStudentEmail)
+//                    .collect(Collectors.toList());
+//
+//            String instructorId = createdProject.getInstructor() != null ? createdProject.getInstructor().getInstructorEmail() : null;
+//
+//            List<Long> taskIds = createdProject.getTasks().stream()
+//                    .map(Task::getTaskId)
+//                    .collect(Collectors.toList());
+//
+//            ViewProjectDTO viewProjectDTO = new ViewProjectDTO(
+//                    createdProject.getProjectId(),
+//                    createdProject.getProjectIdea(),
+//                    createdProject.getProjectDescription(),
+//                    studentIds,
+//                    instructorId,
+//                    taskIds
+//            );
+//
+//            return ResponseEntity.status(HttpStatus.CREATED)
+//                    .body(new ApiResponse<>(true, viewProjectDTO, "Project created successfully", HttpStatus.CREATED.value()));
+//        } catch (EntityNotFoundException e) {
+//            // Handle missing instructor
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body(new ApiResponse<>(false, null, e.getMessage(), HttpStatus.NOT_FOUND.value()));
+//        } catch (Exception e) {
+//            // Handle other errors
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(new ApiResponse<>(false, null, "Failed to create Project: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+//        }
+//    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<ViewProjectDTO>>> getAllProjects() {
@@ -315,6 +320,52 @@ public class ProjectController {
         model.addAttribute("project", project);
 
         return "studentHome"; // This should match your Thymeleaf template name
+    }
+
+    @GetMapping("/project-creation")
+    public String showProjectCreation(Model model) {
+        List<Instructor> instructors = instructorService.getAllInstructors();
+        List<Project> projects = projectService.getAllProjects();
+
+        System.out.println("Number of instructors: " + instructors.size());
+        System.out.println("Number of projects: " + projects.size());
+
+        model.addAttribute("instructors",instructors);
+        model.addAttribute("projects",projects);
+        return "project-creation";
+    }
+
+//    @GetMapping("/instructorTasks")
+//    public String getAllTasks(Model model, Authentication authentication) {
+//        String email = authentication.getName();
+//        Instructor instructor = instructorService.getInstructorByEmail(email);
+//        List<Task> taskList = studentsProjectsManagementService.getTasksByInstructorEmail(email);
+//        model.addAttribute("tasks", taskList);
+//        return "instructorTasks";
+//    }
+
+
+    @PostMapping("/create-project")
+    public String createProject(@RequestParam String projectName,
+                                @RequestParam String projectDescription,
+                                @RequestParam String instructorEmail,
+                                @AuthenticationPrincipal UserDetails userDetails) {
+
+        studentsProjectsManagementService.createProject(projectName, projectDescription, instructorEmail,userDetails.getUsername());
+        return "redirect:/studentHome";
+    }
+
+    @PostMapping("/join-project/{projectId}")
+    @ResponseBody
+    public Map<String, Object> joinProject(@PathVariable Long projectId,
+                                           @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+//        dme mansooooor,code taba3a b3do ma mtabba2
+            studentsProjectsManagementService.sendJoinRequest(projectId, userDetails.getUsername());
+            return Map.of("success", true);
+        } catch (Exception e) {
+            return Map.of("success", false, "message", e.getMessage());
+        }
     }
 }
 

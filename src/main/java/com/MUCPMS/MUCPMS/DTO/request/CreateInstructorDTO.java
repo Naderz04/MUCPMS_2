@@ -20,5 +20,7 @@ public class CreateInstructorDTO {
     @Size(min = 3, message = "Name should have at least 2 characters")
     private String instructorName;
 
+    private String instructorPhoto;
+
 
 }

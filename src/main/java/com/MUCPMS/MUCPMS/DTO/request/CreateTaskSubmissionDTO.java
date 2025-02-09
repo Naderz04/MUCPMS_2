@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,7 +21,7 @@ public class CreateTaskSubmissionDTO {
     private Long projectId;
     private MultipartFile submissionFile;
     @Temporal(TemporalType.TIMESTAMP)
-    private Date submissionDate;    // Path to the submitted file
+    private LocalDate submissionDate;    // Path to the submitted file
 
     public CreateTaskSubmissionDTO(Long taskId, Long projectId, MultipartFile submissionFile) {
         this.taskId = taskId;

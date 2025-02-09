@@ -5,7 +5,6 @@ import com.MUCPMS.MUCPMS.model.*;
 import com.MUCPMS.MUCPMS.repository.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
-import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class StudentsProjectsManagementService {
@@ -159,27 +157,42 @@ public class StudentsProjectsManagementService {
         }
     }
     // Create a new project and save it to the database
-    public Project createProject(CreateProjectDTO newProject) {
-        // Ensure the instructor exists
-        Instructor instructor = instructorRepository.findById(newProject.getInstructorEmail())
-                .orElseThrow(() -> new EntityNotFoundException("Instructor not found with email: " + newProject.getInstructorEmail()));
 
-        // Create the project
-//        Project project = new Project(newProject.getProjectIdea(), newProject.getProjectDescription(), instructor);
+    public Project createProject(String projectName, String projectDescription, String instructorEmail, String studentEmail) {
+        Student student = studentRepository.findById(studentEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+        Instructor instructor = instructorRepository.findById(instructorEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Instructor not found"));
 
-        // Fetch all tasks assigned by the instructor
-        List<Task> instructorTasks = taskRepository.findByAssignedBy(instructor);
-        Project project = new Project(newProject.getProjectIdea(), newProject.getProjectDescription(), instructor,instructorTasks);
+        Project project = new Project();
+        project.setProjectIdea(projectName);
+        project.setProjectDescription(projectDescription);
+        project.setInstructor(instructor);
+        project.getStudents().add(student);
 
+        student.setProject(project);
 
-
-        // Save the project and updated tasks
-        project = projectRepository.save(project);
-        taskRepository.saveAll(instructorTasks);
-
-        return project;
+        return projectRepository.save(project);
     }
 
+    public void sendJoinRequest(Long projectId, String studentEmail) {
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new EntityNotFoundException("Project not found"));
+        Student student = studentRepository.findById(studentEmail)
+                .orElseThrow(() -> new EntityNotFoundException("Student not found"));
+
+        if (project.getStudents().size() >= 2) {
+            throw new IllegalStateException("Project already has maximum number of students");
+        }
+
+        // In a real application, you would create a JoinRequest entity and save it
+        // For simplicity, we're directly adding the student to the project
+        project.getStudents().add(student);
+        student.setProject(project);
+
+        projectRepository.save(project);
+        studentRepository.save(student);
+    }
 
 
 
@@ -450,7 +463,7 @@ public class StudentsProjectsManagementService {
         for (Task task : tasks) {
             for (TaskSubmission submission : task.getSubmissions()) {
                 if (submission.getProject().getProjectId().equals(projectId)) {
-                    ViewTaskSubmissionDTO submissionDTO = new ViewTaskSubmissionDTO();
+                    ViewTaskSubmissionDTO submissionDTO = new ViewTaskSubmissionDTO(submission.getTask().getTaskName(), submission.getProject().getProjectIdea(), submission.getSubmissionFilePath(), submission.getGrade(), submission.getSubmissionDate());
                     submissionDTO.setTaskName(task.getTaskName());
                     submissionDTO.setProjectName(project.getProjectIdea());
                     submissionDTO.setSubmissionFilePath(submission.getSubmissionFilePath());

@@ -9,7 +9,10 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -18,6 +21,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,7 +39,7 @@ public class InstructorController {
         @Autowired
         private ProjectIdeaService projectIdeaService;
 
-    private static final Logger logger = LoggerFactory.getLogger(InstructorController.class);
+        private static final Logger logger = LoggerFactory.getLogger(InstructorController.class);
 
 
 //        @PostMapping
@@ -317,6 +322,28 @@ public class InstructorController {
         return "home"; // Load index.html as the first page
     }
 
+    @GetMapping("/{email}/photo")
+    public ResponseEntity<Resource> getInstructorPhoto(@PathVariable String email) {
+        Instructor instructor = instructorService.getInstructorByEmail(email);
+        if (instructor == null || instructor.getInstructorPhoto() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Path path = Paths.get("uploads/" + instructor.getInstructorPhoto());
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 }
 

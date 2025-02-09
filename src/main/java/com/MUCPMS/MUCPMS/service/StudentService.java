@@ -26,7 +26,7 @@ public class StudentService {
 
     // Create a new student and save it to the database
     public Student CreateStudent(CreateStudentDTO newStudent) {
-        Student student = new Student(newStudent.getStudentEmail(), newStudent.getStudentName());
+        Student student = new Student(newStudent.getStudentEmail(), newStudent.getStudentName(),newStudent.getStudentPhoto());
         return studentRepository.save(student); // Save to database
     }
 

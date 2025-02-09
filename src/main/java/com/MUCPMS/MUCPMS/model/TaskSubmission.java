@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
     @Table(name = "task_submissions")
@@ -31,13 +31,12 @@ public class TaskSubmission {
 
     private Double grade; // Nullable until set by the instructor.
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date submissionDate;
+    private LocalDate submissionDate;
 
     private String submissionFilePath; // Path to the submitted file
 
 
-    public TaskSubmission(Task task, Project project, Date submissionDate, String submissionFilePath) {
+    public TaskSubmission(Task task, Project project, LocalDate submissionDate, String submissionFilePath) {
         this.task = task;
         this.project = project;
         this.grade = null;

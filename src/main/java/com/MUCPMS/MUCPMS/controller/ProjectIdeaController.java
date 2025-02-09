@@ -2,16 +2,17 @@ package com.MUCPMS.MUCPMS.controller;
 
 import com.MUCPMS.MUCPMS.DTO.request.*;
 import com.MUCPMS.MUCPMS.DTO.response.ApiResponse;
-import com.MUCPMS.MUCPMS.model.Project;
-import com.MUCPMS.MUCPMS.model.ProjectIdea;
-import com.MUCPMS.MUCPMS.model.Task;
+import com.MUCPMS.MUCPMS.model.*;
+import com.MUCPMS.MUCPMS.service.InstructorService;
 import com.MUCPMS.MUCPMS.service.ProjectIdeaService;
 import com.MUCPMS.MUCPMS.service.ProjectService;
 import com.MUCPMS.MUCPMS.service.StudentsProjectsManagementService;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -29,6 +30,9 @@ public class ProjectIdeaController {
     private ProjectIdeaService projectIdeaService;
     @Autowired
     private StudentsProjectsManagementService studentsProjectsManagementService;
+
+    @Autowired
+    private InstructorService instructorService;
 
 //    @PostMapping
 //    public ResponseEntity<ApiResponse<ViewProjectIdeaDTO>> createProjectIdea(@Valid @RequestBody CreateProjectIdeaDTO projectIdeaDTO) {
@@ -147,17 +151,7 @@ public class ProjectIdeaController {
         }
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteProjectIdea(@PathVariable Long id, RedirectAttributes redirectAttributes) {
-        try {
-            projectIdeaService.DeleteProjectIdea(id);
-            redirectAttributes.addFlashAttribute("successMessage", "Project idea deleted successfully");
-            return "redirect:/project-ideas"; // Redirect to the project ideas list page
-        } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Failed to delete Project idea: " + e.getMessage());
-            return "redirect:/error"; // Redirect to a generic error page
-        }
-    }
+
 
     @DeleteMapping("/deleteAll")
     public String deleteAllProjectIdeas(RedirectAttributes redirectAttributes) {
@@ -173,7 +167,10 @@ public class ProjectIdeaController {
 
 
     @GetMapping()
-    public String getProjectIdeas(Model model) {
+    public String getProjectIdeas(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
         List<ProjectIdea> projectIdeas = projectIdeaService.getAllProjectsIdeas();
         model.addAttribute("projectIdeas", projectIdeas);
         // Return the name of the Thymeleaf HTML page (e.g., projectIdeas.html)
@@ -187,6 +184,49 @@ public class ProjectIdeaController {
         model.addAttribute("tasks", tasks);
         model.addAttribute("projects", projects);
         return "instructorHome";
+    }
+
+
+
+    // Display form to create a new project idea
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("projectIdea", new ProjectIdea());
+        model.addAttribute("instructors", instructorService.getAllInstructors()); // For dropdown in form
+        return "CreateProjectIdea"; // Thymeleaf template for the create form
+    }
+
+    // Handle form submission to create a new project idea
+    @PostMapping("/new")
+    public String createProjectIdea(@ModelAttribute ProjectIdea projectIdea) {
+
+        projectIdeaService.saveProjectIdea(projectIdea);
+        return "redirect:/projectIdeas"; // Redirect to the list of project ideas
+    }
+
+    // Display form to edit an existing project idea
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        ProjectIdea projectIdea = projectIdeaService.getProjectIdeaById(id);
+        model.addAttribute("projectIdea", projectIdea);
+        model.addAttribute("instructors", instructorService.getAllInstructors()); // For dropdown in form
+        return "EditProjectIdea"; // Thymeleaf template for the edit form
+    }
+
+    // Handle form submission to update an existing project idea
+    @PostMapping("/edit/{id}")
+    public String updateProjectIdea(@PathVariable Long id, @ModelAttribute ProjectIdea projectIdea, @RequestParam String instructorEmail) {
+        Instructor instructor = instructorService.getInstructorByEmail(instructorEmail);
+        projectIdea.setSuggestedBy(instructor);
+        projectIdeaService.saveProjectIdea(projectIdea);
+        return "redirect:/projectIdeas"; // Redirect to the list of project ideas
+    }
+
+    // Handle deletion of a project idea
+    @GetMapping("/delete/{id}")
+    public String deleteProjectIdea(@PathVariable Long id) {
+        projectIdeaService.DeleteProjectIdeaById(id);
+        return "redirect:/projectIdeas"; // Redirect to the list of project ideas
     }
 
 }

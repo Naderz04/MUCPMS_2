@@ -5,8 +5,7 @@
     <title>Title</title>
     <link rel="stylesheet" th:href="@{/css/sidebar.css}">
     <link rel="stylesheet" th:href="@{/css/StudentHome.css}">
-    <link rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 </head>
 <body>
 <aside class="sidebar">
@@ -20,8 +19,8 @@
         <div class="user-info">
             <hr class="divider">
             <div class="user-details">
-                <img src="/static/images/Dr.fatima-abdallah.jpg" alt="User Avatar" class="user-avatar">
-                <span class="user-name">John Doe</span>
+                <img th:src="@{'/students/' + ${student.studentEmail} + '/photo'}" alt="User Avatar" class="user-avatar">
+                <span class="user-name" th:text="${student.studentName}" >John Doe</span>
             </div>
             <hr class="divider">
         </div>

@@ -38,10 +38,14 @@ public class ProjectIdeaService {
     public ProjectIdea getProjectIdeaById(Long projectIdeaId) {
         return projectIdeaRepository.findById(projectIdeaId).orElse(null); // Fetch by primary key
     }
-
+    public void DeleteProjectIdeaById(Long id){
+        projectIdeaRepository.deleteById(id);
+    }
     public void DeleteAllProjects(){
         projectIdeaRepository.deleteAll();
     }
-
+    public void saveProjectIdea(ProjectIdea projectIdea) {
+        projectIdeaRepository.save(projectIdea);
+    }
 
 }

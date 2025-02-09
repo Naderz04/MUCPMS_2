@@ -20,7 +20,7 @@ public class InstructorService {
 
     // Create a new instructor and save to the database
     public Instructor CreateInstructor(CreateInstructorDTO newInstructor) {
-        Instructor instructor = new Instructor(newInstructor.getInstructorEmail(), newInstructor.getInstructorName());
+        Instructor instructor = new Instructor(newInstructor.getInstructorEmail(), newInstructor.getInstructorName(), newInstructor.getInstructorPhoto());
         return instructorRepository.save(instructor); // Save to database
     }
 

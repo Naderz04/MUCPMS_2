@@ -17,6 +17,7 @@ public class Student {
 
     @Id
     private String studentEmail;
+    private String studentPhoto;
     private String studentName;
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = true) // Allow null if no project is assigned
@@ -27,9 +28,10 @@ public class Student {
     @JoinColumn(name = "student_email")
     private User user;
 
-    public Student(String email, String studentName) {
+    public Student(String email, String studentName,String studentPhoto) {
         this.studentEmail =email;
         this.studentName =studentName;
         this.project = null;
+        this.studentPhoto=studentPhoto;
     }
 }

@@ -31,18 +31,20 @@ public class Instructor {
 
     @OneToMany(mappedBy = "assignedBy", cascade = CascadeType.PERSIST) // Do not delete students when removed from list
     private List<Task> tasks=new ArrayList<>();
+    private String instructorPhoto;
 
     @OneToOne
     @MapsId
     @JoinColumn(name = "instructor_email")
     private User user;
 
-    public Instructor(String email, String instructorName) {
+    public Instructor(String email, String instructorName,String instructorPhoto) {
         this.instructorEmail = email;
         this.instructorName = instructorName;
         this.projects=new ArrayList<>();
         this.projectIdeas=new ArrayList<>();
         this.tasks=new ArrayList<>();
+        this.instructorPhoto=instructorPhoto;
     }
 
 

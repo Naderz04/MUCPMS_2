@@ -17,7 +17,10 @@ import com.MUCPMS.MUCPMS.service.StudentsProjectsManagementService;
 import com.MUCPMS.MUCPMS.service.TaskSubmissionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -26,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -44,17 +49,19 @@ public class StudentController {
     @Autowired
     private TaskSubmissionService taskSubmissionService;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<Student>> createStudent(@Valid @RequestBody CreateStudentDTO studentDTO) {
-        try {
-            Student createdStudents = studentService.CreateStudent(studentDTO);
-            return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new ApiResponse<>(true, createdStudents, "Student created successfully", HttpStatus.CREATED.value()));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse<>(false, null, "Failed to create student: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
-        }
-    }
+//    @PostMapping
+//    public ResponseEntity<ApiResponse<Student>> createStudent(@Valid @RequestBody CreateStudentDTO studentDTO) {
+//        try {
+//            Student createdStudents = studentService.CreateStudent(studentDTO);
+//            return ResponseEntity.status(HttpStatus.CREATED)
+//                    .body(new ApiResponse<>(true, createdStudents, "Student created successfully", HttpStatus.CREATED.value()));
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                    .body(new ApiResponse<>(false, null, "Failed to create student: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
+//        }
+//    }
+
+
     @GetMapping
     public ResponseEntity<ApiResponse<List<ViewStudentDTO>>> getAllStudents() {
         try {
@@ -151,8 +158,8 @@ public class StudentController {
     @GetMapping("/studentHome")
     public String getTasksForProject(Model model, Authentication authentication) {
         // Fetch the project
-        Student s=studentService.getStudentByEmail(authentication.getName());
-        Long projectId=s.getProject().getProjectId();
+        Student student=studentService.getStudentByEmail(authentication.getName());
+        Long projectId=student.getProject().getProjectId();
         Project project = projectService.findById(projectId);
 //                .orElseThrow(() -> new RuntimeException("Project not found"));
 
@@ -177,11 +184,34 @@ public class StudentController {
         model.addAttribute("missingTasks", missingTasks);
         model.addAttribute("doneTasks", doneTasks);
         model.addAttribute("project", project);
+        model.addAttribute("student", student);
 
         return "studentHome"; // This should match your Thymeleaf template name
     }
 
 
+    @GetMapping("/{email}/photo")
+    public ResponseEntity<Resource> getStudentPhoto(@PathVariable String email) {
+        Student student = studentService.getStudentByEmail(email);
+        if (student == null || student.getStudentPhoto() == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        try {
+            Path path = Paths.get("uploads/" + student.getStudentPhoto());
+            Resource resource = new UrlResource(path.toUri());
+
+            if (resource.exists() || resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .contentType(MediaType.IMAGE_JPEG)
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @PostMapping("/submitTask")
     public String createTaskSubmission(
@@ -204,5 +234,10 @@ public class StudentController {
             redirectAttributes.addFlashAttribute("error", "Failed to submit file: " + e.getMessage());
             return "redirect:/students/studentHome";
         }
+
+
+
     }
+
+
   }

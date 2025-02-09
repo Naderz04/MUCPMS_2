@@ -14,9 +14,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CreateStudentDTO {
     @Email
-    String StudentEmail;
+   private String StudentEmail;
     @NotBlank
     @Size(min = 2, message = "Name should have at least 2 characters")
-    String StudentName;
-
+   private String StudentName;
+    private String studentPhoto;
 }

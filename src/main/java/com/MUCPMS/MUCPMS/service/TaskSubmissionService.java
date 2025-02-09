@@ -18,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,7 +56,7 @@ import java.util.stream.Collectors;
                 submission.setTask(task);
                 submission.setProject(project);
                 submission.setSubmissionFilePath(filePath);
-                submission.setSubmissionDate(new Date());
+                submission.setSubmissionDate(LocalDate.now());
                 taskSubmissionRepository.save(submission);
 
                 return submission;
@@ -67,7 +68,7 @@ import java.util.stream.Collectors;
         private String saveFile(MultipartFile file) {
             // Implement file saving logic here
             // Example: Save to a directory and return the file path
-            String uploadDir = "uploads/";
+            String uploadDir = "C:/uploads/";
             File dir = new File(uploadDir);
             if (!dir.exists()) {
                 dir.mkdirs();

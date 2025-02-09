@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Cookie|Raleway:300,700,400);
+
+/* General styles */
+body {
+        font-family: 'Raleway', sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: url(https://img.freepik.com/free-photo/abstract-dark-blue-scratch-background_1409-1327.jpg);
+    width: 45%;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.tabs {
+    justify-content: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
+    position: relative;
+}
+
+.tabs ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    gap: 20px;
+}
+
+.tabs li {
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: 0.3s;
+    text-align: center;
+    flex: 1;
+    position: relative;
+}
+
+.tabs li:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 60%;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.tabs li.is-active {
+    background-color: gold;
+    color: white;
+}
+
+.tabs li:hover {
+    background-color: gold;
+    color: white;
+}
+
+.tab-content {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.field {
+    margin-bottom: 20px; /* Increased space between label and input */
+}
+
+.label {
+    font-weight: bold;
+    margin-bottom: 10px; /* Increased space between label and input */
+    color: white;
+    display: block;
+}
+
+.input, .textarea, .select select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size:large;
+}
+
+.button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.button:hover {
+    background-color: #0056b3;
+}
+
+.select {
+    width: 100%;
+}
+    .hrefText{
+       color: white;
+    text-decoration-line: none;
+    }
+</style>
+<body>
+
+<div class="container" th:fragment="project-creation">
+    <div class="tabs">
+        <ul>
+            <li class=" is-active"><a class="hrefText" href="#create-project">Create Project</a></li>
+            <li><a class="hrefText" href="#select-project">Select Existing Project</a></li>
+        </ul>
+    </div>
+
+    <div id="create-project" class="tab-content">
+        <form th:action="@{/projects/create-project}" method="post">
+            <div class="field">
+                <label class="label">Project Name</label>
+                <div class="control">
+                    <input class="input" type="text" name="projectIdea" required>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Project Description</label>
+                <div class="control">
+                    <textarea class="textarea" name="projectDescription" required></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Select Instructor</label>
+                <div class="control">
+                    <div class="select">
+                        <select name="instructor" required>
+                            <option th:each="instructor : ${instructors}"
+                                    th:value="${instructor.instructorEmail}"
+                                    th:text="${instructor.instructorName}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary" type="submit">Create Project</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div id="select-project" class="tab-content" style="display: none;">
+        <div class="field">
+            <label class="label">Select Existing Project</label>
+            <div class="control">
+                <div class="select">
+                    <select id="existingProject">
+                        <option th:each="project : ${projects}"
+                                th:value="${project.projectId}"
+                                th:text="${project.projectIdea}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="field">
+            <div class="control">
+                <button class="button is-primary" onclick="selectProject()">Join Project</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script th:fragment="project-creation-script">
+    function selectProject() {
+        var projectId = document.getElementById('existingProject').value;
+        fetch('/student/join-project/' + projectId, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Join request sent successfully!');
+                window.location.href = '/student/home';
+            } else {
+                alert('Failed to send join request: ' + data.message);
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while sending the join request.');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const tabs = document.querySelectorAll('.tabs li');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('is-active'));
+                tab.classList.add('is-active');
+
+                const target = tab.querySelector('a').getAttribute('href').substring(1);
+                tabContents.forEach(content => {
+                    if (content.id === target) {
+                        content.style.display = 'block';
+                    } else {
+                        content.style.display = 'none';
+                    }
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

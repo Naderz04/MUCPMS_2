@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.Date;
 
     @Getter
@@ -16,7 +17,7 @@ import java.util.Date;
         private String projectName;
         private String submissionFilePath;
         private Double grade;
-        private Date submissionDate;
+        private LocalDate submissionDate;
     }
 
 
