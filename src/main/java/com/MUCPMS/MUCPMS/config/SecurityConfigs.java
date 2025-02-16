@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -26,7 +27,7 @@ public class SecurityConfigs {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/home", "/login", "/register","/projects/project-creation").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/", "/home", "/login", "/register","/projects/project-creation","/projects/create-project").permitAll()
                         .requestMatchers("/instructors/**").hasRole("INSTRUCTOR")
                         .requestMatchers("/students/**","/projects/**").hasRole("STUDENT")
                         .anyRequest().authenticated()
@@ -48,9 +49,11 @@ public class SecurityConfigs {
                         })
                         .permitAll()
                 )
-                .logout((logout) -> logout
+                .logout(logout -> logout
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
                         .logoutSuccessUrl("/login?logout")
-                        .permitAll());
+                        .permitAll()
+                );
 
         return http.build();
     }

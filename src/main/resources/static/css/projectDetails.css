@@ -1,3 +1,121 @@
+    :root {
+        --primary-color: #2B3A55;
+        --secondary-color: #576CBC;
+        --accent-color: #A5D7E8;
+        --background-color: #F5F5F5;
+        --text-color: #333;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+
+    body {
+        background-color: var(--background-color);
+        color: var(--text-color);
+    }
+
+    .container {
+     max-width: 1300px;
+    margin: 1% 0% 1% 19%;
+    }
+
+    /* Top Section Styles */
+    .project-header {
+        min-height: 50vh;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .project-info {
+        padding-right: 2rem;
+    }
+
+    .project-title {
+        font-size: 3.5rem;
+        color: var(--primary-color);
+        margin-bottom: 1.5rem;
+    }
+
+    .project-description {
+        font-size: 1.1rem;
+        line-height: 1.6;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .team-members {
+        display: flex;
+        gap: 2rem;
+        justify-content: center;
+    }
+
+    .member {
+        text-align: center;
+    }
+
+    .member-image {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 1rem;
+        border: 4px solid goldenrod;
+    }
+
+    .member-name {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        margin-bottom: 0.5rem;
+    }
+
+    /* Progress Section Styles */
+    .progress-section {
+        display: flex;
+        justify-content: space-around;
+        margin: 2rem 0;
+        padding: 2rem;
+        background: white;
+        border-radius: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .progress-item {
+        text-align: center;
+    }
+
+    .progress-circle {
+        width: 120px;
+        height: 120px;
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .progress-circle canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .progress-value {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: var(--primary-color);
+    }
+
+    .progress-label {
+        font-size: 1rem;
+        color: #666;
+    }
 
 
 .todo-container {
@@ -37,6 +155,8 @@
 
 .tasks {
   padding: 1rem;
+  margin:auto;
+  width:75%;
 }
 
 .task-section {
@@ -68,7 +188,7 @@
 .task-section:not(.hidden) {
   display: block;
 }
-.task .details {
+.details {
   padding: 0.5rem;
   background: #f1f1f1;
   border-top: 1px solid #ddd;
@@ -76,19 +196,13 @@
   border-radius: 0 0 5px 5px;
 }
 
-.task p{
-font-size:1.4rem;
-padding:2%;
+.task pre{
+font-size:1.3rem;
 color:midnightblue;
-
 }
-.task .task-duedate {
-    display: block;
-    text-align: end;
-    color:darkred;
-}
-.due-date{
-color:darkred;
+.task p{
+font-size:1.3rem;
+color:midnightblue;
 }
 
 
@@ -155,10 +269,7 @@ color:darkred;
   color: #3c4043;
 }
 
-.assignment-content {
-  padding: 20px 0;
-  border-bottom:2px solid goldenrod
-}
+
 
 .instructions {
   margin: 20px 0;
@@ -474,3 +585,294 @@ input, button, select, textarea {
 	background-color: var(--c-action-primary);
 	border-color: var(--c-action-primary);
 }
+
+
+.taskHeader h2 {
+  margin: 0; /* Remove default margin for h2 */
+  font-size: 1.5rem; /* Adjust font size as needed */
+  color: midnightblue; /* Match your design */
+}
+
+.taskHeader .task-duedate {
+  margin: 0; /* Remove default margin for p */
+  font-size: 1.2rem; /* Adjust font size as needed */
+  color: darkred; /* Match your design */
+  text-align: right; /* Align the due date to the right */
+}
+.taskHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  height: 80px; /* Increase the height as needed */
+}
+
+.task {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+  background: #f9f9f9;
+  transition: transform 0.2s ease;
+  min-height: 120px; /* Ensure the task container has a minimum height */
+}
+
+.task:hover {
+  transform: translateY(-2px);
+}
+
+/* Add a smooth transition for the dropdown */
+.assignment-content {
+  padding: 1rem;
+  background-color: white;
+  border-radius: 12px;
+  border-bottom: 2px solid goldenrod;
+  margin-top: 1rem;
+  max-height: 0; /* Start with no height */
+  overflow: hidden; /* Hide overflow content */
+  transition: max-height 0.5s ease-in-out, opacity 0.3s ease-in-out; /* Smooth transition */
+  opacity: 0; /* Start with 0 opacity */
+}
+
+/* When the dropdown is visible */
+.assignment-content:not(.hidden) {
+  max-height: 800px; /* Adjust based on your content height */
+  opacity: 1; /* Fade in */
+}
+
+/* Add a subtle animation for the dropdown */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.assignment-content:not(.hidden) {
+  animation: slideDown 0.5s ease-in-out; /* Apply the animation */
+}
+
+
+
+input, button, select, textarea {
+	font: inherit;
+}
+
+.modal {
+	width: 90%;
+	max-width: 500px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 10vh;
+	margin-bottom: 10vh;
+	background-color: #FFF;
+	border-radius: .5rem;
+	box-shadow: 0 5px 15px rgba(#000, .2);
+}
+
+.modal-header {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	padding: 1.5rem 1.5rem 1rem;
+}
+
+.logo-circle {
+	width: 3.5rem;
+	height: 3.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border-radius: 50%;
+	background-color: var(--c-action-primary-accent);
+	svg {
+		max-width: 1.5rem;
+	}
+}
+
+.btn-close {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: .25rem;
+	border: none;
+	background-color: transparent;
+	&:hover, &:focus {
+		background-color: var(--c-action-primary-accent);
+	}
+}
+
+.modal-body {
+	padding: 1rem 1.5rem;
+}
+
+.modal-title {
+	font-weight: 700;
+}
+
+.modal-description {
+	color: var(--c-text-secondary);
+}
+
+.upload-area {
+	margin-top: 1.25rem;
+	border: none;
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23ccc' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	background-color: transparent;
+	padding: 3rem;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	&:hover, &:focus {
+	background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%232e44ff' stroke-width='3' stroke-dasharray='6%2c 14' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+	}
+}
+
+.upload-area-icon {
+	display: block;
+	width: 2.25rem;
+	height: 2.25rem;
+	svg {
+		max-height: 100%;
+		max-width: 100%;
+	}
+}
+
+.upload-area-title {
+	margin-top: 1rem;
+	display: block;
+	font-weight: 700;
+		color: var(--c-text-primary);
+}
+
+.upload-area-description {
+		display: block;
+		color: var(--c-text-secondary);
+	strong {
+		color: var(--c-action-primary);
+		font-weight: 700;
+	}
+}
+
+.modal-footer {
+	padding: 1rem 1.5rem 1.5rem;
+	display: flex;
+	justify-content: flex-end;
+	[class*="btn-"] {
+		margin-left: .75rem;
+	}
+}
+
+.btn-secondary, .btn-primary {
+	padding: .5rem 1rem;
+	font-weight: 500;
+	border: 2px solid var(--c-action-secondary);
+	border-radius: .25rem;
+	background-color: transparent;
+}
+
+.btn-primary {
+	color: #FFF;
+	background-color: var(--c-action-primary);
+	border-color: var(--c-action-primary);
+}
+/* Divider Line */
+.divider {
+  border: 0;
+  height: 1px;
+  background-color: #e5e5e5;
+  margin: 20px 0;
+}
+
+/* Drag-and-Drop Upload Area */
+.upload-area {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease;
+}
+
+.upload-area:hover {
+  border-color: #2e44ff;
+}
+
+.upload-area-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--c-action-primary);
+}
+
+.upload-area-title {
+  display: block;
+  font-weight: 700;
+  color: var(--c-text-primary);
+  margin-top: 10px;
+}
+
+.upload-area-description {
+  display: block;
+  color: var(--c-text-secondary);
+  margin-top: 5px;
+}
+
+.upload-area-description strong {
+  color: var(--c-action-primary);
+  font-weight: 700;
+}
+
+.btn-submit {
+  background-color: : gold;
+  color: midnightblue;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.btn-submit:hover {
+  background-color: #1a2fbf;
+}
+
+.task-grade {
+    top: 10px;
+    right: 15px;
+    font-weight: bold;
+    color: #4CAF50; /* Green for grades */
+    font-size: 1.1rem;
+}
+.user-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid gold;
+}
+    /* Additional responsive styles */
+    @media (max-width: 768px) {
+        .project-header {
+            grid-template-columns: 1fr;
+        }
+
+        .progress-section {
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .team-members {
+            flex-direction: column;
+            align-items: center;
+        }
+
+    }

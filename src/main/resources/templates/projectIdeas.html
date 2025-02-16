@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="<http://www.thymeleaf.org>">
+<html lang="en" xmlns:th="<http://www.thymeleaf.org>" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="UTF-8">
@@ -8,25 +8,26 @@
   <link rel="stylesheet" th:href="@{/css/instructorHome.css}">
   <link rel="stylesheet" th:href="@{/css/projectIdeas.css}">
 <!--  <link rel="stylesheet" th:href="@{css/projectIdeas.css}">-->
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
 </head>
 <body>
 <div id="navbarContainer"></div>
 
-<aside class="sidebar">
+
+<aside sec:authorize="hasRole('INSTRUCTOR')" class="sidebar" >
   <!-- Sidebar header -->
   <header class="sidebar-header">
     <a href="#" class="header-logo">
-      <img src="/static/images/Logo5-removebg.png" alt="MUCPMS">
+      <img th:src="@{/images/Logo5-removebg.png}" alt="Logo">
     </a>
 
     <!-- User Info Section -->
     <div class="user-info">
       <hr class="divider">
       <div class="user-details">
-        <img src="/static/images/Dr.fatimaabdallah.jpg" alt="User Avatar" class="user-avatar">
-        <span class="user-name">John Doe</span>
+        <img th:src="@{'/instructors/' + ${instructor.instructorEmail} + '/photo'}" alt="User Avatar" class="user-avatar">
+        <span class="user-name" th:text="${user.Name}" >John Doe</span>
       </div>
       <hr class="divider">
     </div>
@@ -39,23 +40,21 @@
     <!-- Primary top nav -->
     <ul class="nav-list primary-nav">
       <li class="nav-item">
-        <a th:href="@{/instructorHome}" class="nav-link">
+        <a th:href="@{/instructors/instructorHome}" class="nav-link">
           <span class="nav-icon material-symbols-rounded">dashboard</span>
           <span class="nav-label">Home</span>
         </a>
-        <span class="nav-tooltip">Dashboard</span>
       </li>
       <li class="nav-item">
-        <a th:href="@{/instructorProjects}" class="nav-link">
+        <a th:href="@{/instructors/instructorProjects}" class="nav-link">
           <span class="nav-icon material-symbols-rounded">calendar_today</span>
           <span class="nav-label">My Projects</span>
         </a>
-        <span class="nav-tooltip">Calendar</span>
       </li>
       <li class="nav-item">
-        <a href="/templates/instructorProjects.html" class="nav-link">
+        <a th:href="@{/instructors/instructorProgressPage}" class="nav-link">
           <span class="nav-icon material-symbols-rounded">swipe_right</span>
-          <span class="nav-label">Projects Progress </span>
+          <span class="nav-label">Projects Progress</span>
         </a>
       </li>
       <li class="nav-item">
@@ -63,22 +62,23 @@
           <span class="nav-icon material-symbols-rounded">notifications</span>
           <span class="nav-label">Notifications</span>
         </a>
-        <span class="nav-tooltip">Notifications</span>
       </li>
       <li class="nav-item">
         <a th:href="@{/projectIdeas}" class="nav-link">
           <span class="nav-icon material-symbols-rounded">group</span>
           <span class="nav-label">Project Ideas</span>
         </a>
-        <span class="nav-tooltip">Team</span>
       </li>
-
-
       <li class="nav-item">
         <a href="#" class="nav-link">
           <span class="nav-icon material-symbols-rounded">chat</span>
-
           Chats
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:href="@{/instructors/instructorTasks}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">task_alt</span>
+          My Tasks
         </a>
       </li>
     </ul>
@@ -102,10 +102,94 @@
     </ul>
   </nav>
 </aside>
+
+<aside sec:authorize="hasRole('STUDENT')" class="sidebar" >
+  <!-- Sidebar header -->
+  <header class="sidebar-header">
+    <a href="#" class="header-logo">
+      <img th:src="@{/images/Logo5-removebg.png}" alt="Logo">
+    </a>
+
+    <!-- User Info Section -->
+    <div class="user-info">
+      <hr class="divider">
+      <div class="user-details">
+        <img th:src="@{'/students/' + ${student.studentEmail} + '/photo'}" alt="User Avatar" class="user-avatar">
+        <span class="user-name" th:text="${user.name}" >John Doe</span>
+      </div>
+      <hr class="divider">
+    </div>
+    <button class="toggler menu-toggler">
+      <span class="material-symbols-rounded">menu</span>
+    </button>
+  </header>
+
+  <nav class="sidebar-nav">
+    <!-- Primary top nav -->
+    <ul class="nav-list primary-nav">
+      <li class="nav-item">
+        <a th:href="@{/students/studentHome}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">dashboard</span>
+          <span class="nav-label">Home</span>
+        </a>
+        <span class="nav-tooltip">Dashboard</span>
+      </li>
+
+      <li class="nav-item">
+        <a th:href="@{/students/studentHome}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">notifications</span>
+          <span class="nav-label">Notifications</span>
+        </a>
+        <span class="nav-tooltip">Notifications</span>
+      </li>
+      <li class="nav-item">
+        <a href="/templates/projectIdeas.html" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">group</span>
+          <span class="nav-label">Project Ideas</span>
+        </a>
+        <span class="nav-tooltip">Team</span>
+      </li>
+
+
+      <li class="nav-item">
+        <a th:href="@{/students/studentHome}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">chat</span>
+          Chats
+        </a>
+      </li>
+      <li class="nav-item">
+        <a th:href="@{/projects/projectsId/notes}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">note</span>
+          Notes
+        </a>
+      </li>
+    </ul>
+
+    <!-- Secondary bottom nav -->
+    <ul class="nav-list secondary-nav">
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">account_circle</span>
+          <span class="nav-label">Profile</span>
+        </a>
+        <span class="nav-tooltip">Profile</span>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">logout</span>
+          <span class="nav-label">Logout</span>
+        </a>
+        <span class="nav-tooltip">Logout</span>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+
 <div class="container">
 <h1>Project Ideas</h1>
 
-<a th:href="@{/projectIdeas/new}">Create New Project Idea</a>
+<button sec:authorize="hasRole('INSTRUCTOR')" class="CreateNewIdea"> <a th:href="@{/projectIdeas/new}">Create New Project Idea</a></button>
 </div>
 <table class="styled-table">
   <thead>
@@ -130,26 +214,33 @@
     <!-- Change font color to dark red if availability is "Taken" -->
     <td th:style="${projectIdea.availability == 'Taken'} ? 'color: darkred;' : ''" th:text="${projectIdea.availability}"></td>
     <!-- Show Edit/Delete links only if the user is an instructor -->
-    <td th:if="${user != null && user.role == 'INSTRUCTOR'}">
-      <a th:href="@{/projectIdeas/edit/{id}(id=${projectIdea.projectIdeaId})}">Edit</a> |
-      <a th:href="@{/projectIdeas/delete/{id}(id=${projectIdea.projectIdeaId})}" onclick="return confirm('Are you sure you want to delete this project idea?');">Delete</a>
+    <td sec:authorize="hasRole('INSTRUCTOR')">
+      <!-- Edit Icon -->
+      <a th:href="@{/projectIdeas/edit/{id}(id=${projectIdea.projectIdeaId})}" title="Edit">
+        <i class="bi bi-pencil-square"></i> <!-- Bootstrap Edit Icon -->
+      </a>
+      &nbsp; <!-- Add space between icons -->
+      <!-- Delete Icon -->
+      <a th:href="@{/projectIdeas/delete/{id}(id=${projectIdea.projectIdeaId})}"
+         onclick="return confirm('Are you sure you want to delete this project idea?');" title="Delete">
+        <i class="bi bi-trash"></i> <!-- Bootstrap Delete Icon -->
+      </a>
     </td>
   </tr>
   </tbody>
 </table></body>
+<script>
 
-<!--<script>-->
-<!--  function loadComponent(url, containerId) {-->
-<!--      fetch(url)-->
-<!--          .then(response => response.text())-->
-<!--          .then(data => {-->
-<!--              document.getElementById(containerId).innerHTML = data;-->
-<!--          })-->
-<!--          .catch(error => console.error('Error loading component:', error));-->
-<!--  }-->
 
-<!--  // Load navbar and sidebar-->
-<!--  loadComponent('navbar.html', 'navbarContainer');-->
-<!--  loadComponent('sidebar.html', 'sidebarContainer');-->
-<!--</script>-->
+
+  // Run when the document is fully loaded
+document.addEventListener('DOMContentLoaded', () => {
+const currentUrl = window.location.href;
+document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+  if(link.href === currentUrl) {
+    link.classList.add('active');
+  }
+});
+});
+</script>
 </html>

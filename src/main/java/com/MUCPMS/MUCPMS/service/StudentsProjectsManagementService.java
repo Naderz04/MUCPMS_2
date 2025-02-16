@@ -170,8 +170,21 @@ public class StudentsProjectsManagementService {
         project.setInstructor(instructor);
         project.getStudents().add(student);
 
-        student.setProject(project);
 
+        student.setProject(project);
+        for (Task task: project.getInstructor().getTasks()) {
+            for (Project project1 : project.getInstructor().getProjects())
+            {
+                task.getProjects().remove(project1);
+        }
+        }
+
+        for (Task task: project.getInstructor().getTasks()) {
+            for (Project project1 : project.getInstructor().getProjects())
+            {
+                task.getProjects().add(project1);
+            }
+        }
         return projectRepository.save(project);
     }
 

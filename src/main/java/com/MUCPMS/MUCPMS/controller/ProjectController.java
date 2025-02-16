@@ -2,10 +2,8 @@ package com.MUCPMS.MUCPMS.controller;
 
 import com.MUCPMS.MUCPMS.DTO.request.*;
 import com.MUCPMS.MUCPMS.DTO.response.ApiResponse;
-import com.MUCPMS.MUCPMS.model.Instructor;
-import com.MUCPMS.MUCPMS.model.Project;
-import com.MUCPMS.MUCPMS.model.Student;
-import com.MUCPMS.MUCPMS.model.Task;
+import com.MUCPMS.MUCPMS.model.*;
+import com.MUCPMS.MUCPMS.repository.NotesRepository;
 import com.MUCPMS.MUCPMS.repository.ProjectRepository;
 import com.MUCPMS.MUCPMS.repository.TaskRepository;
 import com.MUCPMS.MUCPMS.service.*;
@@ -23,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,6 +43,10 @@ public class ProjectController {
 
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private NotesRepository notesRepository;
+    @Autowired
+    private NotesService notesService;
 
 //    @PostMapping
 //    public ResponseEntity<ApiResponse<ViewProjectDTO>> createProject(@Valid @RequestBody CreateProjectDTO projectDTO) {
@@ -323,15 +326,17 @@ public class ProjectController {
     }
 
     @GetMapping("/project-creation")
-    public String showProjectCreation(Model model) {
+    public String showProjectCreation(Model model,Authentication authentication) {
         List<Instructor> instructors = instructorService.getAllInstructors();
         List<Project> projects = projectService.getAllProjects();
-
+        Student student=studentService.getStudentByEmail(authentication.getName());
         System.out.println("Number of instructors: " + instructors.size());
         System.out.println("Number of projects: " + projects.size());
 
         model.addAttribute("instructors",instructors);
         model.addAttribute("projects",projects);
+        model.addAttribute("student",student);
+
         return "project-creation";
     }
 
@@ -346,13 +351,11 @@ public class ProjectController {
 
 
     @PostMapping("/create-project")
-    public String createProject(@RequestParam String projectName,
-                                @RequestParam String projectDescription,
-                                @RequestParam String instructorEmail,
-                                @AuthenticationPrincipal UserDetails userDetails) {
-
-        studentsProjectsManagementService.createProject(projectName, projectDescription, instructorEmail,userDetails.getUsername());
-        return "redirect:/studentHome";
+    public String createProject(@ModelAttribute Project project,
+Authentication authentication) {
+        Instructor instructor=instructorService.getInstructorByEmail(project.getInstructor().getInstructorEmail());
+        studentsProjectsManagementService.createProject(project.getProjectIdea(),project.getProjectDescription(),instructor.getInstructorEmail(),authentication.getName());
+        return "studentHome";
     }
 
     @PostMapping("/join-project/{projectId}")
@@ -367,5 +370,86 @@ public class ProjectController {
             return Map.of("success", false, "message", e.getMessage());
         }
     }
+
+
+
+    @GetMapping("/notes")
+    public String viewProjectNotes(Model model,Authentication authentication) {
+
+        Student student=studentService.getStudentByEmail(authentication.getName());
+        List<Notes> notes = notesRepository.findByProject_ProjectId(student.getProject().getProjectId());
+        Project project=projectService.getProjectById(student.getProject().getProjectId());
+        model.addAttribute("project", project);
+        model.addAttribute("noteDto", new NoteDTO());
+        model.addAttribute("notes", notes);
+        model.addAttribute("student", student);
+
+
+
+        return "notes";  // This corresponds to the Thymeleaf template "notes.html"
+    }
+
+    @PostMapping("/notes")
+    public String addNote( @ModelAttribute("noteDto") NoteDTO noteDto,Authentication authentication) {
+        // Create a new note and save it to the project.
+        Notes note = new Notes();
+        note.setTitle(noteDto.getTitle());
+        note.setContent(noteDto.getContent());
+
+        Student student=studentService.getStudentByEmail(authentication.getName());
+
+        Project project = projectRepository.findById(student.getProject().getProjectId()).orElseThrow(() -> new RuntimeException("Project not found"));
+        note.setProject(project);
+        notesRepository.save(note);
+
+        return "redirect:/projects/notes";
+    }
+
+
+
+
+    // -------------------- Edit Note --------------------
+    // 1. Show the edit form
+    @GetMapping("/notes/{noteId}/edit")
+    public String showEditNoteForm(@PathVariable Long noteId, Model model) {
+        Notes note = notesRepository.findById(noteId)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+        NoteDTO noteDto = new NoteDTO();
+        noteDto.setTitle(note.getTitle());
+        noteDto.setContent(note.getContent());
+        model.addAttribute("noteDto", noteDto);
+        model.addAttribute("note", note);
+        return "editNote";  // This corresponds to a Thymeleaf template "editNote.html"
+    }
+
+//    @DeleteMapping("/notes/{noteId}")
+//    public String deleteNote(@PathVariable Long noteId) {
+//        notesService.deleteNote(noteId);
+//        return "redirect:/projects/";
+//    }
+
+    @GetMapping("/deleteNote/{id}")
+    public String deletePost(@PathVariable Long id) {
+        Notes note = notesRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+        Long projectId = note.getProject().getProjectId();
+        notesService.deleteNote(id);
+
+        return "redirect:/projects/" + projectId + "/notes";
+    }
+
+
+    // 2. Process the edit form submission (using POST with _method override to simulate PUT)
+    @PostMapping("/notes/{noteId}/edit")
+    public String updateNote(@PathVariable Long noteId, @ModelAttribute("noteDto") NoteDTO noteDto) {
+        Notes note = notesRepository.findById(noteId)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+        note.setTitle(noteDto.getTitle());
+        note.setContent(noteDto.getContent());
+        notesRepository.save(note);
+        Long projectId = note.getProject().getProjectId();
+        return "redirect:/projects/" + projectId + "/notes";
+    }
+
 }
 

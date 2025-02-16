@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Edit Note</title>
+  <meta charset="UTF-8">
+</head>
+<body>
+<h2>Edit Note</h2>
+<form th:action="@{/projects/notes/{noteId}/edit(noteId=${note.id})}" method="post">
+  <div>
+    <label for="noteTitle">Title:</label>
+    <input type="text" id="noteTitle" th:field="*{note.title}" required>
+  </div>
+  <div>
+    <label for="noteContent">Content:</label>
+    <textarea id="noteContent" th:field="*{note.content}" rows="4" required></textarea>
+  </div>
+  <button type="submit">Update Note</button>
+</form>
+<!-- Link to go back to the project's notes list -->
+<a th:href="@{'/projects/' + ${note.project.projectId} + '/notes'}">Back to Notes</a>
+</body>
+</html>

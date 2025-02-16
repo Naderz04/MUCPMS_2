@@ -34,6 +34,8 @@ public class FileDownloadController {
     private StudentsProjectsManagementService studentsProjectsManagementService; // Use existing file storage service
 
 
+
+
         @GetMapping("/download/{fileName:.+}")
         public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
             try {

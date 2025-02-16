@@ -21,6 +21,8 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
     @Service
@@ -105,6 +107,16 @@ import java.util.stream.Collectors;
                     .collect(Collectors.toList());
         }
 
+        public Optional<TaskSubmission> getTaskSubmissionByProjectAndTask(Long projectId, Long taskId) {
+            return taskSubmissionRepository.findByTask_TaskIdAndProject_ProjectId(projectId, taskId);
+        }
+        public Map<Long, TaskSubmission> getTaskSubmissionsForProject(Long projectId) {
+            List<TaskSubmission> submissions = taskSubmissionRepository.findByProject_ProjectId(projectId);
+            return submissions.stream().collect(Collectors.toMap(
+                    submission -> submission.getTask().getTaskId(),
+                    submission -> submission
+            ));
+        }
 
 
     }

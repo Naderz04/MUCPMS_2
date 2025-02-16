@@ -4,95 +4,99 @@
   <meta charset="UTF-8">
   <title>Create New Project Idea</title>
   <style>
-    /* General body styling */
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f4f9;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
+    @import url(https://fonts.googleapis.com/css?family=Cookie|Raleway:300,700,400);
 
-    /* Form container */
-    .form-container {
-      background-color: #ffffff;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      width: 100%;
-      max-width: 500px;
-    }
+/* General body styling */
+body {
+  font-family: 'Raleway', sans-serif;
+  background-color: gold;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
 
-    /* Form title */
-    h1 {
-      text-align: center;
-      color: #333;
-      margin-bottom: 1.5rem;
-    }
+/* Form container */
+.form-container {
+  padding: 2rem;
+  background: url('https://img.freepik.com/free-photo/abstract-dark-blue-scratch-background_1409-1327.jpg') center;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 500px;
+}
 
-    /* Form labels */
-    label {
-      display: block;
-      margin-bottom: 0.5rem;
-      font-weight: bold;
-      color: #555;
-    }
+/* Form title */
+h1 {
+  text-align: center;
+  color: white;
+  margin-bottom: 1.5rem;
+}
 
-    /* Form inputs and textarea */
-    input[type="text"],
-    textarea,
-    select {
-      width: 100%;
-      padding: 0.75rem;
-      margin-bottom: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 1rem;
-      color: #333;
-    }
+/* Form labels */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: white;
+}
 
-    /* Focus state for inputs */
-    input[type="text"]:focus,
-    textarea:focus,
-    select:focus {
-      border-color: #007bff;
-      outline: none;
-      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    }
+/* Form inputs and textarea */
+input[type="text"],
+textarea,
+select {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333;
+}
 
-    /* Submit button */
-    button[type="submit"] {
-      width: 100%;
-      padding: 0.75rem;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+/* Focus state for inputs */
+input[type="text"]:focus,
+textarea:focus,
+select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
 
-    button[type="submit"]:hover {
-      background-color: #0056b3;
-    }
+/* Submit button */
+button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: gold;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
 
-    /* Back link */
-    .back-link {
-      display: block;
-      text-align: center;
-      margin-top: 1rem;
-      color: #007bff;
-      text-decoration: none;
-      font-size: 0.9rem;
-    }
+button[type="submit"]:hover {
+  background-color: #0056b3;
+}
 
-    .back-link:hover {
-      text-decoration: underline;
-    }
+/* Back link */
+.back-link {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    margin-top: 1rem;
+    color: #007bff;
+    text-decoration: none;
+    background-color: white;
+    font-size: 0.9rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
   </style>
 </head>
 <body>
@@ -120,7 +124,7 @@
     </div>
     <div>
       <label for="instructorId">Suggested By:</label>
-      <select id="instructorId" name="instructorId" required>
+      <select id="instructorId" th:field="*{suggestedBy}" required>
         <option th:each="instructor : ${instructors}" th:value="${instructor.instructorEmail}" th:text="${instructor.instructorName}"></option>
       </select>
     </div>

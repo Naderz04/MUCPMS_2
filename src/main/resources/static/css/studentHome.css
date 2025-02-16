@@ -85,12 +85,14 @@ body {
   border-radius: 0 0 5px 5px;
 }
 
+.task pre{
+font-size:1.3rem;
+color:midnightblue;
+}
 .task p{
 font-size:1.3rem;
 color:midnightblue;
-
 }
-
 
 
 .task .add-work {
@@ -523,7 +525,7 @@ input, button, select, textarea {
 
 /* When the dropdown is visible */
 .assignment-content:not(.hidden) {
-  max-height: 550px; /* Adjust based on your content height */
+  max-height: 800px; /* Adjust based on your content height */
   opacity: 1; /* Fade in */
 }
 
@@ -718,8 +720,8 @@ input, button, select, textarea {
 }
 
 .btn-submit {
-  background-color: #2e44ff;
-  color: #fff;
+  background-color: : gold;
+  color: midnightblue;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
@@ -730,4 +732,16 @@ input, button, select, textarea {
 
 .btn-submit:hover {
   background-color: #1a2fbf;
+}
+
+.task-grade {
+    top: 10px;
+    right: 15px;
+    font-weight: bold;
+    color: #4CAF50; /* Green for grades */
+    font-size: 1.1rem;
+}
+
+.grade-section{
+    text-align-last: end;
 }

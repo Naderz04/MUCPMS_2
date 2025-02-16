@@ -103,6 +103,18 @@
     // Load navbar and sidebar
     loadComponent('navbar.html', 'navbarContainer');
     loadComponent('sidebar.html', 'sidebarContainer');
+
+
+
+      // Run when the document is fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentUrl = window.location.href;
+    document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+      if(link.href === currentUrl) {
+        link.classList.add('active');
+      }
+    });
+  });
 </script>
 <!-- Script -->
 <script src="/static/js/instructorHome.js"></script>

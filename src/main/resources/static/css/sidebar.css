@@ -113,6 +113,11 @@
   color: #151A2D;
   background: gold;
 }
+.sidebar-nav .nav-link.active {
+  background: gold; /* Optional: change background to highlight it */
+  color:#151A2D;
+}
+
 
 .sidebar-nav .nav-item {
   position: relative;

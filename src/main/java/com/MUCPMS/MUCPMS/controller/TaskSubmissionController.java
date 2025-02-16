@@ -59,15 +59,24 @@ public class TaskSubmissionController {
 
 
 
-    @PatchMapping("/grade")
-    public ResponseEntity<ApiResponse<Void>> updateGrade(@RequestBody UpdateGradeDTO dto) {
+    @PostMapping("/grade")
+    public String updateGrade(
+            @RequestParam("submissionId") Long submissionId,
+            @RequestParam("grade") Double grade,
+            RedirectAttributes redirectAttributes) {
+
         try {
+            UpdateGradeDTO dto = new UpdateGradeDTO();
+            dto.setTaskSubmissionId(submissionId);
+            dto.setGrade(grade);
+
             taskSubmissionService.updateGrade(dto);
-            return ResponseEntity.ok(new ApiResponse<>(true, null, "Grade updated successfully", HttpStatus.OK.value()));
+            redirectAttributes.addFlashAttribute("success", "Grade updated successfully");
         } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new ApiResponse<>(false, null, e.getMessage(), HttpStatus.NOT_FOUND.value()));
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
+
+        return "redirect:/instructors/${projectId}/details";
     }
 
 

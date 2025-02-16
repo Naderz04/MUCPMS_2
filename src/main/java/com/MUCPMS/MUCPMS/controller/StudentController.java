@@ -11,6 +11,7 @@ import com.MUCPMS.MUCPMS.model.Project;
 import com.MUCPMS.MUCPMS.model.Student;
 //import com.MUCPMS.MUCPMS.service.ManagementService;
 import com.MUCPMS.MUCPMS.model.Task;
+import com.MUCPMS.MUCPMS.model.TaskSubmission;
 import com.MUCPMS.MUCPMS.service.ProjectService;
 import com.MUCPMS.MUCPMS.service.StudentService;
 import com.MUCPMS.MUCPMS.service.StudentsProjectsManagementService;
@@ -34,6 +35,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -157,16 +159,26 @@ public class StudentController {
 
     @GetMapping("/studentHome")
     public String getTasksForProject(Model model, Authentication authentication) {
-        // Fetch the project
-        Student student=studentService.getStudentByEmail(authentication.getName());
-        Long projectId=student.getProject().getProjectId();
+        // Fetch the student and project
+        Student student = studentService.getStudentByEmail(authentication.getName());
+        Long projectId = student.getProject().getProjectId();
         Project project = projectService.findById(projectId);
-//                .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        // Fetch all tasks assigned to the project
-        List<Task> tasks = studentsProjectsManagementService.getTasksByInstructorEmail(project.getInstructor().getInstructorEmail());
+        // Fetch tasks assigned to the project
+        List<Task> tasks = studentsProjectsManagementService
+                .getTasksByInstructorEmail(project.getInstructor().getInstructorEmail());
 
-        // Classify tasks based on their status for the specific project
+        // Get all task submissions for the project
+//        Map<Long, TaskSubmission> taskSubmissions = taskSubmissionService.getTaskSubmissionsForProject(projectId);
+        Map<Long, TaskSubmission> allSubmissions = taskSubmissionService.getTaskSubmissionsForProject(projectId);
+
+        // Filter the submissions so that we keep only the current student's submissions.
+        Map<Long, TaskSubmission> taskSubmissions = allSubmissions.entrySet().stream()
+                .filter(entry -> entry.getValue().getProject().equals(student.getProject()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+
+        // Classify tasks based on their status
         List<Task> assignedTasks = tasks.stream()
                 .filter(task -> studentsProjectsManagementService.getStatusForProject(task, project).equals("Assigned"))
                 .collect(Collectors.toList());
@@ -179,15 +191,20 @@ public class StudentController {
                 .filter(task -> studentsProjectsManagementService.getStatusForProject(task, project).equals("Done"))
                 .collect(Collectors.toList());
 
-        // Pass the classified tasks to the Thymeleaf template
+        // Pass data to the Thymeleaf template
         model.addAttribute("assignedTasks", assignedTasks);
         model.addAttribute("missingTasks", missingTasks);
         model.addAttribute("doneTasks", doneTasks);
-        model.addAttribute("project", project);
+        model.addAttribute("taskSubmissions", taskSubmissions);
+        if(student.getProject()!=null) {
+            model.addAttribute("project", project);
+        }
         model.addAttribute("student", student);
 
-        return "studentHome"; // This should match your Thymeleaf template name
+
+        return "studentHome"; // Matches your Thymeleaf template
     }
+
 
 
     @GetMapping("/{email}/photo")
@@ -228,7 +245,6 @@ public class StudentController {
             // Save the submission
             taskSubmissionService.createTaskSubmission(dto);
 
-            redirectAttributes.addFlashAttribute("message", "File submitted successfully!");
             return "redirect:/students/studentHome"; // Redirect to the student home page
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Failed to submit file: " + e.getMessage());

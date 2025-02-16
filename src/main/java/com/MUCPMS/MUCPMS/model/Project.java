@@ -22,6 +22,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long projectId;
     private String projectIdea;
+    @Column(columnDefinition = "TEXT")
     private String projectDescription;
 
     @OneToMany(mappedBy = "project", cascade = CascadeType.PERSIST, orphanRemoval = false) // Do not delete students when removed from list
@@ -44,7 +45,9 @@ public class Project {
     private List<Task> tasks = new ArrayList<>(); // Many tasks for each project
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<TaskSubmission> taskSubmissions = new ArrayList<>();
-
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Notes> notes= new ArrayList<>();
+    private String status;
 
 
     public Project(String projectIdea, String projectDescription,Instructor instructor) {
@@ -53,7 +56,10 @@ public class Project {
         this.students = new ArrayList<>();
         this.instructor = instructor;
         this.tasks=new ArrayList<>();
+        this.taskSubmissions=new ArrayList<>();
+        this.notes=new ArrayList<>();
     }
+
     public Project(String projectIdea, String projectDescription,Instructor instructor,List<Task> tasks) {
         this.projectIdea = projectIdea;
         this.projectDescription = projectDescription;

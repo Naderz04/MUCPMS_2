@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Assessment Sheet</title>
+  <style>
+    .table {
+    border-collapse: collapse;
+    width: auto; /* Or use a percentage, e.g., 70% */
+    margin: 0 auto;  /* Center the table */
+    table-layout: fixed;  /* Force columns to follow the set widths */
+}
+
+.th, td {
+    border: 1px solid #ddd;
+    padding: 3px;
+    text-align: center;
+    width: 80px; /* Adjust this value to control cell width */
+    overflow: hidden; /* Hide overflow if the content is too long */
+    text-overflow: ellipsis; /* Optionally show an ellipsis for truncated text */
+    white-space: nowrap;
+}
+
+.average {
+    background-color: #90EE90;
+}
+
+.overall {
+    background-color: #98FB98;
+}
+
+.save-status {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px;
+    border-radius: 5px;
+    display: none;
+}
+
+.save-success {
+    background-color: #90EE90;
+}
+
+.save-error {
+    background-color: #FFB6C1;
+}
+  </style>
+</head>
+<body>
+<div id="saveStatus" class="save-status"></div>
+<table id="assessmentTable">
+  <thead>
+  <tr>
+    <th rowspan="2">Project</th>
+    <th colspan="2">Report</th>
+    <th>CSC 498</th>
+    <th colspan="4">Presentation</th>
+    <th colspan="4">Implementation</th>
+    <th colspan="4">Extra</th>
+    <th rowspan="2">Overall</th>
+  </tr>
+  <tr>
+    <th>Supervisor (25%)</th>
+    <th>Average</th>
+    <th>Supervisor (10%)</th>
+    <th>Supervisor</th>
+    <th>Committee 1</th>
+    <th>Committee 2</th>
+    <th class="average">Average (15%)</th>
+    <th>Supervisor</th>
+    <th>Committee 1</th>
+    <th>Committee 2</th>
+    <th class="average">Average (40%)</th>
+    <th>Supervisor</th>
+    <th>Committee 1</th>
+    <th>Committee 2</th>
+    <th class="average">Average (10%)</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="assessment : ${assessments}" th:attr="data-project-id=${assessment.project.projectId}">
+    <td th:text="${assessment.project.projectIdea}"></td>
+    <td><input type="number" class="grade-input" data-category="report" data-role="supervisor" th:value="${assessment.reportSupervisor}" /></td>
+    <td class="average report-average"></td>
+    <td><input type="number" class="grade-input" data-category="csc498" data-role="supervisor" th:value="${assessment.csc498Supervisor}" /></td>
+    <td><input type="number" class="grade-input" data-category="presentation" data-role="supervisor" th:value="${assessment.presentationSupervisor}" /></td>
+    <td><input type="number" class="grade-input" data-category="presentation" data-role="committee1" th:value="${assessment.presentationCommittee1}" /></td>
+    <td><input type="number" class="grade-input" data-category="presentation" data-role="committee2" th:value="${assessment.presentationCommittee2}" /></td>
+    <td class="average presentation-average"></td>
+    <td><input type="number" class="grade-input" data-category="implementation" data-role="supervisor" th:value="${assessment.implementationSupervisor}" /></td>
+    <td><input type="number" class="grade-input" data-category="implementation" data-role="committee1" th:value="${assessment.implementationCommittee1}" /></td>
+    <td><input type="number" class="grade-input" data-category="implementation" data-role="committee2" th:value="${assessment.implementationCommittee2}" /></td>
+    <td class="average implementation-average"></td>
+    <td><input type="number" class="grade-input" data-category="extra" data-role="supervisor" th:value="${assessment.extraSupervisor}" /></td>
+    <td><input type="number" class="grade-input" data-category="extra" data-role="committee1" th:value="${assessment.extraCommittee1}" /></td>
+    <td><input type="number" class="grade-input" data-category="extra" data-role="committee2" th:value="${assessment.extraCommittee2}" /></td>
+    <td class="average extra-average"></td>
+    <td class="overall"></td>
+  </tr>
+  </tbody>
+</table>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      const table = document.getElementById('assessmentTable');
+      const saveStatus = document.getElementById('saveStatus');
+
+      // Calculate averages and overall grade for each row initially
+      document.querySelectorAll('#assessmentTable tbody tr').forEach(calculateRowGrades);
+
+      // Add event listeners for input changes
+      table.addEventListener('input', function(e) {
+          if (e.target.classList.contains('grade-input')) {
+              const row = e.target.closest('tr');
+              calculateRowGrades(row);
+              saveAssessment(row);
+          }
+      });
+
+      function calculateRowGrades(row) {
+          // Calculate Report (25%)
+          const reportGrade = parseFloat(row.querySelector('[data-category="report"][data-role="supervisor"]').value || 0);
+          row.querySelector('.report-average').textContent = reportGrade.toFixed(2);
+
+          // Calculate CSC498 (10%)
+          const csc498Grade = parseFloat(row.querySelector('[data-category="csc498"][data-role="supervisor"]').value || 0);
+
+          // Calculate Presentation Average (15%)
+          const presentationGrades = getGrades(row, 'presentation');
+          const presentationAvg = calculateAverage(presentationGrades);
+          row.querySelector('.presentation-average').textContent = presentationAvg.toFixed(2);
+
+          // Calculate Implementation Average (40%)
+          const implementationGrades = getGrades(row, 'implementation');
+          const implementationAvg = calculateAverage(implementationGrades);
+          row.querySelector('.implementation-average').textContent = implementationAvg.toFixed(2);
+
+          // Calculate Extra Average (10%)
+          const extraGrades = getGrades(row, 'extra');
+          const extraAvg = calculateAverage(extraGrades);
+          row.querySelector('.extra-average').textContent = extraAvg.toFixed(2);
+
+          // Calculate Overall Grade
+          const overall = (reportGrade * 0.25) +
+                        (csc498Grade * 0.10) +
+                        (presentationAvg * 0.15) +
+                        (implementationAvg * 0.40) +
+                        (extraAvg * 0.10);
+          row.querySelector('.overall').textContent = overall.toFixed(2);
+      }
+
+      function getGrades(row, category) {
+          return Array.from(row.querySelectorAll(`[data-category="${category}"]`))
+              .map(input => parseFloat(input.value || 0));
+      }
+
+      function calculateAverage(grades) {
+          return grades.reduce((a, b) => a + b, 0) / grades.length;
+      }
+
+      function saveAssessment(row) {
+          const projectId = row.getAttribute('data-project-id');
+          const assessment = {
+              reportSupervisor: getValue(row, 'report', 'supervisor'),
+              csc498Supervisor: getValue(row, 'csc498', 'supervisor'),
+              presentationSupervisor: getValue(row, 'presentation', 'supervisor'),
+              presentationCommittee1: getValue(row, 'presentation', 'committee1'),
+              presentationCommittee2: getValue(row, 'presentation', 'committee2'),
+              implementationSupervisor: getValue(row, 'implementation', 'supervisor'),
+              implementationCommittee1: getValue(row, 'implementation', 'committee1'),
+              implementationCommittee2: getValue(row, 'implementation', 'committee2'),
+              extraSupervisor: getValue(row, 'extra', 'supervisor'),
+              extraCommittee1: getValue(row, 'extra', 'committee1'),
+              extraCommittee2: getValue(row, 'extra', 'committee2')
+          };
+
+          fetch(`/instructors/save/${projectId}`, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(assessment)
+          })
+          .then(response => {
+              if (!response.ok) {
+                  throw new Error('Network response was not ok');
+              }
+              return response.json();
+          })
+          .then(data => {
+              showSaveStatus('Assessment saved successfully', true);
+          })
+          .catch(error => {
+              console.error('Error:', error);
+              showSaveStatus('Error saving assessment', false);
+          });
+      }
+
+      function getValue(row, category, role) {
+          return parseFloat(row.querySelector(`[data-category="${category}"][data-role="${role}"]`).value || 0);
+      }
+
+      function showSaveStatus(message, isSuccess) {
+          saveStatus.textContent = message;
+          saveStatus.className = 'save-status ' + (isSuccess ? 'save-success' : 'save-error');
+          saveStatus.style.display = 'block';
+
+          setTimeout(() => {
+              saveStatus.style.display = 'none';
+          }, 3000);
+      }
+  });
+
+
+
+       // Run when the document is fully loaded
+  document.addEventListener('DOMContentLoaded', () => {
+    const currentUrl = window.location.href;
+    document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+      if(link.href === currentUrl) {
+        link.classList.add('active');
+      }
+    });
+  });
+</script>
+</body>
+</html>
+

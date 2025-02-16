@@ -1,0 +1,124 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+h1 {
+  color: #202124;
+  margin-bottom: 20px;
+}
+
+.add-note {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
+  margin-bottom: 20px;
+  padding: 20px;
+}
+
+.add-note form {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-note input,
+.add-note textarea {
+  border: none;
+  font-size: 16px;
+  margin-bottom: 10px;
+  padding: 10px;
+  resize: none;
+}
+
+.add-note input:focus,
+.add-note textarea:focus {
+  outline: none;
+}
+
+.add-note button {
+  align-self: flex-end;
+  background-color: #feefc3;
+  border: none;
+  border-radius: 4px;
+  color: #202124;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 8px 16px;
+  transition: background-color 0.3s;
+}
+
+.add-note button:hover {
+  background-color: #f1e5a6;
+}
+
+.notes-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Responsive grid */
+  gap: 16px;
+}
+
+.note {
+  background-color: gold;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(60, 64, 67, 0.302), 0 2px 6px 2px rgba(60, 64, 67, 0.149);
+  display: flex;
+  flex-direction: column;
+  min-height: 100px;
+  padding: 16px;
+  position: relative;
+  transition: box-shadow 0.3s;
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.note:hover {
+  box-shadow: 0 1px 3px 0 rgba(60, 64, 67, 0.302), 0 4px 8px 3px rgba(60, 64, 67, 0.149);
+}
+
+.note h3 {
+  color: #202124;
+  font-size: 16px;
+  margin: 0 0 8px 0;
+}
+
+.note pre {
+  color: #5f6368;
+  font-size: 14px;
+  line-height: 1.5;
+  margin: 0;
+  white-space: pre-wrap; /* Preserve spaces and line breaks */
+  overflow-wrap: break-word; /* Break long words if necessary */
+  word-wrap: break-word; /* For older browsers */
+  overflow: hidden; /* Prevent content from overflowing */
+}
+
+.note-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: auto;
+  opacity: 0;
+  padding-top: 8px;
+  transition: opacity 0.3s;
+}
+
+.note:hover .note-actions {
+  opacity: 1;
+}
+
+.note-actions a {
+  color: #5f6368;
+  font-size: 18px;
+  margin-left: 12px;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.note-actions a:hover {
+  color: #202124;
+}

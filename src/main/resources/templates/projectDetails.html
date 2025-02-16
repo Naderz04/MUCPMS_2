@@ -1,213 +1,64 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="<http://www.thymeleaf.org>">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Project Details</title>
   <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
-  <link rel="stylesheet" href="/static/css/sidebar.css">
-  <link rel="stylesheet" href="/static/css/projectDetails.css">
-
+  <link rel="stylesheet" th:href="@{/css/projectDetails.css}">
   <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_task"/>
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=add_task">
   <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=task_alt"/>
-
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=task_alt">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-  <style>
-    :root {
-        --primary-color: #2B3A55;
-        --secondary-color: #576CBC;
-        --accent-color: #A5D7E8;
-        --background-color: #F5F5F5;
-        --text-color: #333;
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: 'Inter', sans-serif;
-    }
-
-    body {
-        background-color: var(--background-color);
-        color: var(--text-color);
-    }
-
-    .container {
-         max-width: 1300px;
-    margin: 1% 0% 1% 19%;
-     padding: 2rem;
-    }
-
-    /* Top Section Styles */
-    .project-header {
-        min-height: 50vh;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 2rem;
-        margin-bottom: 2rem;
-    }
-
-    .project-info {
-        padding-right: 2rem;
-    }
-
-    .project-title {
-        font-size: 3.5rem;
-        color: var(--primary-color);
-        margin-bottom: 1.5rem;
-    }
-
-    .project-description {
-        font-size: 1.1rem;
-        line-height: 1.6;
-        color: #666;
-        margin-bottom: 2rem;
-    }
-
-    .team-members {
-        display: flex;
-        gap: 2rem;
-        justify-content: center;
-    }
-
-    .member {
-        text-align: center;
-    }
-
-    .member-image {
-        width: 150px;
-        height: 150px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin-bottom: 1rem;
-        border: 4px solid goldenrod;
-    }
-
-    .member-name {
-        font-size: 1.2rem;
-        color: var(--primary-color);
-        margin-bottom: 0.5rem;
-    }
-
-    /* Progress Section Styles */
-    .progress-section {
-        display: flex;
-        justify-content: space-around;
-        margin: 2rem 0;
-        padding: 2rem;
-        background: white;
-        border-radius: 1rem;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-
-    .progress-item {
-        text-align: center;
-    }
-
-    .progress-circle {
-        width: 120px;
-        height: 120px;
-        position: relative;
-        margin-bottom: 1rem;
-    }
-
-    .progress-circle canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-
-    .progress-value {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: var(--primary-color);
-    }
-
-    .progress-label {
-        font-size: 1rem;
-        color: #666;
-    }
-
-    /* Include your existing todo-container styles here */
-    ${your_existing_css}
-
-    /* Additional responsive styles */
-    @media (max-width: 768px) {
-        .project-header {
-            grid-template-columns: 1fr;
-        }
-
-        .progress-section {
-            flex-direction: column;
-            gap: 2rem;
-        }
-
-        .team-members {
-            flex-direction: column;
-            align-items: center;
-        }
-    }
-  </style>
 </head>
 <body>
-<div th:replace="~{fragments/sidebar :: sidebar}"></div>
 
+<!--<div th:replace="~{fragments/sidebar :: sidebar}"></div>-->
 <div class="container">
   <section class="project-header">
     <div class="project-info">
-      <h1 class="project-title">Project Details</h1>
-      <p class="project-description">
-        This collaborative project focuses on developing innovative solutions
-        for modern challenges. Our team is working together to create
-        impactful results through careful planning and execution.
+      <h1 class="project-title" th:text="${project.projectIdea}">Project Details</h1>
+      <p class="project-description" th:text="${project.projectDescription}">
+        <!-- Dynamic description from DB -->
       </p>
     </div>
     <div class="team-members">
-      <div class="member">
-        <img src="/static/images/Dr.Rayan.png" alt="Team Member 1" class="member-image">
-        <h3 class="member-name">Sarah Johnson</h3>
-      </div>
-      <div class="member">
-        <img src="/placeholder.svg?height=150&width=150" alt="Team Member 2" class="member-image">
-        <h3 class="member-name">Michael Chen</h3>
+      <div class="member" th:each="member : ${project.students}">
+        <img th:src="@{'/students/' + ${member.studentEmail} + '/photo'}" alt="Team Member" class="user-avatar"
+             th:attr="alt=${member.studentPhoto}">
+        <h3 class="member-name" th:text="${member.studentName}">Member Name</h3>
       </div>
     </div>
   </section>
 
+  <!-- Progress Section: Counts and Progress Circles will be computed via JavaScript -->
   <section class="progress-section">
     <div class="progress-item">
       <div class="progress-circle">
-        <canvas id="completedProgress"></canvas>
-        <div class="progress-value">10</div>
-      </div>
-      <div class="progress-label">Completed Tasks</div>
-    </div>
-    <div class="progress-item">
-      <div class="progress-circle">
-        <canvas id="missingProgress"></canvas>
-        <div class="progress-value">5</div>
-      </div>
-      <div class="progress-label">Missing Tasks</div>
-    </div>
-    <div class="progress-item">
-      <div class="progress-circle">
         <canvas id="assignedProgress"></canvas>
-        <div class="progress-value">8</div>
+        <div id="assignedCount" class="progress-value">0</div>
       </div>
       <div class="progress-label">Assigned Tasks</div>
     </div>
-  </section>
 
-  <!-- Include your existing todo-container HTML here -->
+    <div class="progress-item">
+      <div class="progress-circle">
+        <canvas id="missingProgress"></canvas>
+        <div id="missingCount" class="progress-value">0</div>
+      </div>
+      <div class="progress-label">Missing Tasks</div>
+    </div><div class="progress-item">
+    <div class="progress-circle">
+      <canvas id="completedProgress"></canvas>
+      <div id="completedCount" class="progress-value">0</div>
+    </div>
+    <div class="progress-label">Completed Tasks</div>
+  </div>
+     </section>
+
+  <!-- Tasks Container -->
   <div class="todo-container">
     <div class="tabs">
       <button class="tab active" data-section="assigned">Assigned</button>
@@ -217,153 +68,353 @@
     <div class="tasks">
       <div class="task-section" id="assigned">
         <h2>Assigned Tasks</h2>
-        <div class="task">
-          <h3>Math Homework</h3>  <p class="task-duedate">Due: Jan 25, 2025</p>
-
-          <!-- Keep your existing HTML structure but update the task details section -->
-          <div class="details hidden">
-            <div class="assignment-header">
-              <div class="assignment-info">
-                <div class="assignment-title">
-                  <div class="assignment-icon">📝</div>
-                  <div>
-                    <h2 class="task-name"></h2>
-
-                  </div>
-                </div>
-              </div>
-              <div class="due-date"></div>
-            </div>
-
-            <div class="assignment-content">
-              <p>Contrary to poaking it over 2000 years old. Richard McClintock, a Latin pt..", comes from a line in section 1.10.32.</p>
-
-              <div class="attachment">
-                <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%20(7)-CdX9PJ0jE1Golg3tew7AYTpqO6natJ.png" alt="Document" class="attachment-icon">
-                <div class="attachment-info">
-                  <div class="filename">Assignment Document</div>
-                  <div class="filetype">Word</div>
-                </div>
-              </div>
-
+        <div class="task" th:each="task : ${assignedTasks}" data-task-id="${task.id}" data-project-id="${task.project.id}">
+          <div class="taskHeader">
+            <h2 th:text="${task.taskName}">Task Name</h2>
+            <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
+          </div>
+          <!-- Task Details Dropdown -->
+          <div class="assignment-content hidden">
+            <p th:text="${task.taskDescription}">Description</p>
+            <!-- Instructor's Attached File -->
+            <!-- Instructor's Attached File -->
+            <div class="attachment">
+                        <span th:if="${task.attachedFilePath != null}"
+                              th:with="fileName=${task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1)},
+                                           fileExtension=${#strings.substring(fileName, fileName.lastIndexOf('.') + 1).toLowerCase()}">
+                                <a th:href="@{'/download/' + ${fileName}}" target="_blank">
+                                    <span th:if="${fileExtension.matches('jpg|jpeg|png|gif')}"
+                                          class="material-symbols-rounded file-icon">image</span>
+                                    <span th:if="${fileExtension == 'pdf'}"
+                                          class="material-symbols-rounded file-icon pdf">description</span>
+                                    <span th:if="${fileExtension == 'doc' or fileExtension == 'docx'}"
+                                          class="material-symbols-rounded file-icon word">description</span>
+                                    <span th:if="${!(fileExtension.matches('jpg|jpeg|png|gif') or fileExtension=='pdf' or fileExtension=='doc' or fileExtension=='docx')}"
+                                          class="material-symbols-rounded file-icon">insert_drive_file</span>
+                                    <span th:text="${fileName}">File Name</span>
+                                </a>
+                        </span>
 
             </div>
-            <div id="uploadedFiles" class="uploaded-files hidden">
-              <!-- Uploaded files will appear here -->
-            </div>
-            <div class="work-status">
-              <!-- Hidden file input -->
-              <input type="file" id="fileInput" class="file-input" accept=".doc,.docx,.pdf" hidden>
+            <hr class="divider">
+            <!-- Drag-and-Drop File Upload Component -->
+            <hr class="divider">
 
-              <!-- Add work button -->
-              <button class="add-work" onclick="document.getElementById('fileInput').click()">
-                <span class="nav-icon material-symbols-rounded">add_circle</span>
-                Add Work
-              </button>
-            </div>
+            <!-- Loop over projects related to the task -->
+            <form th:action="@{/students/submitTask}" method="post" enctype="multipart/form-data">
+              <!-- Hidden fields to ensure the task is submitted for the correct project -->
+              <input type="hidden" name="taskId" th:value="${task.taskId}">
+              <input type="hidden" name="projectId" th:value="${project.projectId}">
 
-            <!-- Add this right after the assignment content and before the work-status div -->
+              <!-- Drag-and-Drop File Upload Component -->
 
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn-submit">Submit File</button>
+            </form>
+            <!-- Submit Button -->
           </div>
         </div>
-
       </div>
+
+
       <div class="task-section hidden" id="missing">
-        <h2>Missing Tasks</h2>
-        <div class="task">
-          <h3>History Assignment</h3>
-          <p>Due: Jan 10, 2025 (Missed)</p>
-          <div class="details hidden">
-            <p>Description: Complete problems 1-20 on page 42 of the textbook.</p>
-            <button class="add-work">Add Work</button>
+        <div class="task" th:each="task : ${missingTasks}" data-task-id="${task.id}" data-project-id="${task.project.id}">
+          <div class="taskHeader">
+            <h2 th:text="${task.taskName}">Task Name</h2>
+            <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
           </div>
-        </div>
+          <!-- Task Details Dropdown -->
+          <div class="assignment-content hidden">
 
+            <div class="grade-section">
+              Grade :  <span class="task-grade" th:text=" ${taskSubmissions[task.taskId]?.grade} ?: 'Not Graded'"></span>
+            </div>
+            <p th:text="${task.taskDescription}">Description</p>
+            <!-- Instructor's Attached File -->
+            <div class="attachment">
+                        <span th:if="${task.attachedFilePath != null}"
+                              th:with="fileName=${task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1)},
+                                           fileExtension=${#strings.substring(fileName, fileName.lastIndexOf('.') + 1).toLowerCase()}">
+                                <a th:href="@{'/download/' + ${fileName}}" target="_blank">
+                                    <span th:if="${fileExtension.matches('jpg|jpeg|png|gif')}"
+                                          class="material-symbols-rounded file-icon">image</span>
+                                    <span th:if="${fileExtension == 'pdf'}"
+                                          class="material-symbols-rounded file-icon pdf">description</span>
+                                    <span th:if="${fileExtension == 'doc' or fileExtension == 'docx'}"
+                                          class="material-symbols-rounded file-icon word">description</span>
+                                    <span th:if="${!(fileExtension.matches('jpg|jpeg|png|gif') or fileExtension=='pdf' or fileExtension=='doc' or fileExtension=='docx')}"
+                                          class="material-symbols-rounded file-icon">insert_drive_file</span>
+                                    <span th:text="${fileName}">File Name</span>
+                                </a>
+                            </span>
+
+            </div>                <!-- Horizontal Line for Separation -->
+            <hr class="divider">
+            <!-- Drag-and-Drop File Upload Component -->
+            <hr class="divider">
+
+            <!-- Loop over projects related to the task -->
+            <form th:action="@{/students/submitTask}" method="post" enctype="multipart/form-data">
+              <!-- Hidden fields to ensure the task is submitted for the correct project -->
+              <input type="hidden" name="taskId" th:value="${task.taskId}">
+              <input type="hidden" name="projectId" th:value="${project.projectId}">
+
+              <!-- Drag-and-Drop File Upload Component -->
+              <label class="upload-area">
+                            <span class="upload-area-icon">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                                    <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="var(--c-action-primary)" />
+                                </svg>
+                            </span>
+                <span class="upload-area-title">Drag file(s) here to upload.</span>
+                <span class="upload-area-description">
+                                Alternatively, you can select a file by <br/><strong>clicking here</strong>
+                            </span>
+                <input type="file" name="file" class="file-input" accept=".doc,.docx,.pdf" style="display: none;" required>
+              </label>
+
+              <!-- Submit Button -->
+              <button type="submit" class="btn-submit">Submit File</button>
+            </form>
+            <!-- Submit Button -->
+          </div>
+
+        </div>
       </div>
+
+
       <div class="task-section hidden" id="done">
-        <h2>Completed Tasks</h2>
-        <div class="task">
-          <h3>Physics Lab Report</h3>
-          <p>Completed on: Jan 18, 2025</p>
-          <div class="details hidden">
-            <p>Description: Complete problems 1-20 on page 42 of the textbook.</p>
-            <button class="add-work">Add Work</button>
+        <div class="task" th:each="task : ${doneTasks}" data-task-id="${task.id}" data-project-id="${task.project.id}">
+          <div class="taskHeader">
+            <h2 th:text="${task.taskName}">Task Name</h2>
+            <p class="task-duedate" th:text="'Due: ' + ${#temporals.format(task.dueDate, 'MMM dd, yyyy')}">Due: Jan 25, 2025</p>
           </div>
-        </div>
+          <!-- Task Details Dropdown -->
+          <div class="assignment-content ">
+            <div class="grade-section">
+              <form th:action="@{/task-submissions/grade}" method="post" class="grade-form">
+                <input type="hidden" name="submissionId" th:value="${taskSubmissions[task.taskId].id} ?: 'Not Graded'">
+                <!-- Grade input and submit button -->
+                <div class="grade-input-container">
+                  <input type="number"
+                         name="grade"
+                         min="0"
+                         max="100"
+                         placeholder="Enter grade"
+                         th:value="${taskSubmissions[task.taskId].grade}"
+                         class="grade-input">
+                  <button type="submit" class="save-grade-btn">Save</button>
+                </div>
 
+                <!-- CSRF Token -->
+              </form>
+            </div>
+            <p th:text="${task.taskDescription}">Description</p>
+            <!-- Instructor's Attached File -->
+            <div class="attachment">
+
+            </div>
+            <!-- Horizontal Line for Separation -->
+            <hr class="divider">
+            <!-- Drag-and-Drop File Upload Component -->
+
+            <div class="attachment">
+                        <span th:if="${taskSubmissions[task.taskId].submissionFilePath != null}"
+                              th:with="fileName=${taskSubmissions[task.taskId].submissionFilePath.substring(taskSubmissions[task.taskId].submissionFilePath.lastIndexOf('/') + 1)},
+                                               fileExtension=${#strings.substring(fileName, fileName.lastIndexOf('.') + 1).toLowerCase()}">
+                                    <a class="file-icon word" th:href="@{'/download/' + ${fileName}}" target="_blank">
+                                        <span th:if="${fileExtension.matches('jpg|jpeg|png|gif')}"
+                                              class="material-symbols-rounded file-icon">image</span>
+                                        <span th:if="${fileExtension == 'pdf'}"
+                                              class="material-symbols-rounded file-icon pdf">description</span>
+                                        <span th:if="${fileExtension == 'doc' or fileExtension == 'docx'}"
+                                              class="material-symbols-rounded file-icon word">description</span>
+                                        <span th:if="${!(fileExtension.matches('jpg|jpeg|png|gif') or fileExtension=='pdf' or fileExtension=='doc' or fileExtension=='docx')}"
+                                              class="material-symbols-rounded file-icon">insert_drive_file</span>
+                                        <span th:text="${fileName}">File Name</span>
+                                    </a>
+                                </span>
+            </div>
+            <hr class="divider">
+
+            <!-- Submit Button -->
+          </div>
+
+        </div>
       </div>
+
     </div>
   </div>
-
 </div>
 
-<script>
-  // Progress Circle Drawing Function
-  function drawProgress(canvasId, percentage, color) {
-      const canvas = document.getElementById(canvasId);
-      const ctx = canvas.getContext('2d');
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
-      const radius = canvas.width / 2 - 10;
 
-      // Set canvas size
+<script>
+  // Run when the document is loaded
+  document.addEventListener('DOMContentLoaded', () => {
+
+    // --- Compute Task Counts from the DOM ---
+    const assignedCount = document.querySelectorAll('#assigned .task').length;
+    const missingCount = document.querySelectorAll('#missing .task').length;
+    const doneCount = document.querySelectorAll('#done .task').length;
+    const totalTasks = assignedCount + missingCount + doneCount;
+
+    // Compute percentages (guarding against division by zero)
+    const completedPercentage = totalTasks ? doneCount / totalTasks : 0;
+    const missingPercentage   = totalTasks ? missingCount / totalTasks : 0;
+    const assignedPercentage  = totalTasks ? assignedCount / totalTasks : 0;
+
+    // --- Update UI counts ---
+    document.getElementById('completedCount').textContent = doneCount;
+    document.getElementById('missingCount').textContent   = missingCount;
+    document.getElementById('assignedCount').textContent  = assignedCount;
+
+    // --- Initialize Progress Circles ---
+    const initProgress = (canvasId, percentage, color) => {
+      const canvas = document.getElementById(canvasId);
       canvas.width = 120;
       canvas.height = 120;
+      drawProgress(canvas, percentage, color);
+    };
 
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    initProgress('completedProgress', completedPercentage, '#4CAF50');
+    initProgress('missingProgress', missingPercentage, '#FF5722');
+    initProgress('assignedProgress', assignedPercentage, '#2196F3');
 
-      // Draw background circle
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#f0f0f0';
-      ctx.lineWidth = 10;
-      ctx.stroke();
+    // --- Tab Switching ---
+    const tabs = document.querySelectorAll('.tab');
+    const sections = document.querySelectorAll('.task-section');
 
-      // Draw progress
-      ctx.beginPath();
-      ctx.arc(centerX, centerY, radius, -Math.PI / 2, (-Math.PI / 2) + (2 * Math.PI * percentage));
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 10;
-      ctx.stroke();
-  }
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
 
-  // Initialize progress circles
-  document.addEventListener('DOMContentLoaded', () => {
-      drawProgress('completedProgress', 0.75, '#4CAF50');
-      drawProgress('missingProgress', 0.3, '#FF5722');
-      drawProgress('assignedProgress', 0.5, '#2196F3');
+        sections.forEach(section => {
+          section.classList.add('hidden');
+          if (section.id === tab.dataset.section) {
+            section.classList.remove('hidden');
+          }
+        });
+      });
+    });
 
-      // Your existing task management JavaScript
-      const tabs = document.querySelectorAll('.tab');
-      const sections = document.querySelectorAll('.task-section');
+    // --- Task Details Toggle & File Upload Handling ---
+    document.querySelectorAll('.task').forEach(task => {
+      const taskHeader = task.querySelector('.taskHeader');
+      const assignmentContent = task.querySelector('.assignment-content');
+      const uploadArea = task.querySelector('.upload-area');
+      const fileInput = task.querySelector('.file-input');
+      let currentFile = null;
 
-      tabs.forEach(tab => {
-          tab.addEventListener('click', () => {
-              const target = tab.dataset.section;
-
-              tabs.forEach(t => t.classList.remove('active'));
-              tab.classList.add('active');
-
-              sections.forEach(section => {
-                  section.classList.add('hidden');
-                  if (section.id === target) {
-                      section.classList.remove('hidden');
-                  }
-              });
-          });
+      // Toggle task details dropdown
+      taskHeader.addEventListener('click', () => {
+        assignmentContent.classList.toggle('hidden');
       });
 
-      // Task details toggle
-      document.querySelectorAll('.task').forEach(task => {
-          task.addEventListener('click', (e) => {
-              if (!e.target.classList.contains('add-work')) {
-                  const details = task.querySelector('.details');
-                  details.classList.toggle('hidden');
-              }
-          });
+      // Open file dialog when clicking the upload area
+      uploadArea.addEventListener('click', () => {
+        fileInput.click();
       });
+
+      // Handle file selection
+      fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          currentFile = file;
+          uploadArea.querySelector('.upload-area-title').textContent = `Selected: ${file.name}`;
+        }
+      });
+
+      // Drag-and-drop functionality
+      ['dragenter', 'dragover'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          uploadArea.classList.add('dragover');
+        });
+      });
+      ['dragleave', 'drop'].forEach(eventName => {
+        uploadArea.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          uploadArea.classList.remove('dragover');
+        });
+      });
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          currentFile = file;
+          uploadArea.querySelector('.upload-area-title').textContent = `Selected: ${file.name}`;
+          fileInput.files = e.dataTransfer.files;
+        }
+      });
+
+      // Handle file submission on form submit
+      task.querySelector('form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        if (!currentFile) {
+          alert("Please select a file before submitting.");
+          return;
+        }
+        const taskId = task.getAttribute('data-task-id');
+        const projectId = task.getAttribute('data-project-id');
+        const formData = new FormData();
+        formData.append('taskId', taskId);
+        formData.append('projectId', projectId);
+        formData.append('submissionFile', currentFile);
+
+        try {
+          const response = await fetch('/students/submitTask', {
+            method: 'POST',
+            body: formData,
+          });
+          if (response.ok) {
+            alert('File submitted successfully!');
+            currentFile = null;
+            uploadArea.querySelector('.upload-area-title').textContent = "Drag file(s) here to upload.";
+          } else {
+            alert('Failed to submit file. Please try again.');
+          }
+        } catch (error) {
+          console.error('Error submitting file:', error);
+          alert('An error occurred while submitting the file.');
+        }
+      });
+    });
+
+    // --- (Optional) Sidebar Active Link Handling ---
+    const currentUrl = window.location.href;
+    document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
+      if (link.href === currentUrl) {
+        link.classList.add('active');
+      }
+    });
   });
+
+  // --- Progress Circle Drawing Function ---
+  function drawProgress(canvas, percentage, color) {
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = canvas.width / 2 - 10;
+
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw background circle
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = '#f0f0f0';
+    ctx.lineWidth = 10;
+    ctx.stroke();
+
+    // Draw progress arc
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, -Math.PI / 2, (-Math.PI / 2) + (2 * Math.PI * percentage));
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 10;
+    ctx.stroke();
+  }
 </script>
 </body>
 </html>

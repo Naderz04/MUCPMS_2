@@ -323,40 +323,68 @@
             margin-top: 10px;
             font-style: italic;
         }
+/* Update the file-preview styles */
+#attachedFilePreview {
+    width: 100%;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    margin: 15px 0;
+}
 
-    .file-preview {
+.file-preview {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
+    gap: 20px;
+    width: 100%;
 }
 
 .file-preview img {
-    width: 64px;
-    height: 64px;
+    width: 100px;
+    height: 100px;
     border-radius: 8px;
-    object-fit: cover;
-    cursor: pointer;
+    object-fit: contain;
+    border: 2px solid #eee;
 }
 
 .file-preview .file-icon {
-    font-size: 64px;
-    color: #666;
-    cursor: pointer;
+    font-size: 80px !important;
+    padding: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.file-preview .file-icon.pdf {
-    color: #ff0000; /* Red for PDF */
+.file-preview a {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    text-decoration: none;
+    color: midnightblue;
+    width: 100%;
 }
 
-.file-preview .file-icon.word {
-    color: #2b579a; /* Blue for Word */
+.file-name-display {
+    font-size: 1.1rem;
+    font-weight: 500;
+    margin-left: 15px;
+    color: #2c3e50;
 }
 
-.file-preview .file-icon.image {
-    color: #4caf50; /* Green for images */
+/* File type specific colors */
+.file-icon.pdf { color: #e53935; }
+.file-icon.word { color: #2b579a; }
+.file-icon.image { color: #4caf50; }
+
+/* Hover effects */
+.file-preview a:hover .file-icon {
+    transform: scale(1.05);
+    transition: transform 0.2s ease;
 }
 
+.file-preview a:hover .file-name-display {
+    color: #1a73e8;
+}
  .task-info {
     display: flex;
     justify-content: space-between;
@@ -376,6 +404,113 @@
     margin-left: auto; /* Pushes it to the right */
 }
 
+        /* Add these styles to your existing CSS */
+
+.submission {
+    background-color: #ffffff;
+    border-radius: 10px;
+    display:inline-block;
+    padding: 20px;
+    margin: 15px ;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    border: 1px solid #e0e0e0;
+}
+
+.submission:hover {
+    transform: translateY(-2px);
+}
+
+.submission h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.25rem;
+}
+
+.submitted-file {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 12px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.submitted-file a {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: #2c3e50;
+    transition: color 0.2s ease;
+}
+
+.submitted-file a:hover {
+    color: #1a73e8;
+}
+
+.file-icon {
+    font-size: 24px !important;
+}
+
+.grade-input-container {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.grade-input {
+    width: 100px;
+    padding: 8px 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.grade-input:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+.save-grade-btn {
+    background-color: gold;
+    color: midnightblue;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.save-grade-btn:hover {
+    background-color: #1557b0;
+}
+
+/* File type colors */
+.file-icon.pdf { color: #e53935; }
+.file-icon.word { color: #2b579a; }
+.file-icon.image { color: #4caf50; }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .grade-input-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .grade-input {
+        width: 100%;
+    }
+
+    .save-grade-btn {
+        width: 100%;
+        padding: 10px;
+    }
+}
 
     </style>
 </head>
@@ -394,58 +529,119 @@
     </button>
 
     <!-- Task Cards -->
+    <!-- Task Cards -->
     <div th:if="${tasks != null and not #lists.isEmpty(tasks)}">
         <div th:each="task : ${tasks}" class="task-card"
              th:attr="data-description=${task.taskDescription},
-              data-total-participants=${task.getTotalProjectsCount()},
-              data-completed-by=${task.getCompletedTasksCount()},
-              data-attached-file-path=${task.attachedFilePath != null ? task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1) : ''},
-              data-attached-file-name=${task.attachedFilePath != null ? task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1) : ''}">
+                  data-total-participants=${task.getTotalProjectsCount()},
+                  data-completed-by=${task.getCompletedTasksCount()},
+                  data-attached-file-path=${task.attachedFilePath != null ? task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1) : ''},
+                  data-attached-file-name=${task.attachedFilePath != null ? task.attachedFilePath.substring(task.attachedFilePath.lastIndexOf('/') + 1) : ''}">
             <h3 th:text="${task.taskName}">Task Name</h3>
+
             <div class="task-details">
-        <span class="cardcompletedby">
-            <h4>Completed By:</h4>
-            <h2 th:text="${task.getCompletedTasksCount()} + '/' + ${task.getTotalProjectsCount()}">0/0</h2>
-        </span>
+            <span class="cardcompletedby">
+                <h4>Completed By:</h4>
+                <h2 th:text="${task.getCompletedTasksCount()} + '/' + ${task.getTotalProjectsCount()}">0/0</h2>
+            </span>
                 <span class="cardduedate">
-            <h4>Due:</h4>
-            <span th:text="${task.dueDate}">Due Date</span>
-        </span>
+                <h4>Due:</h4>
+                <span th:text="${task.dueDate}">Due Date</span>
+            </span>
+            </div>
+
+            <!-- Hidden Submissions Data for this task -->
+            <div class="submissions-data" style="display:none;">
+                <div class="task-submissions">
+                    <h3>Task Submissions</h3>
+                    <div th:if="${task.submissions != null and !#lists.isEmpty(task.submissions)}">
+                        <div th:each="submission : ${task.submissions}" class="submission">
+                            <p>
+                                <!-- Display the project name for the submission -->
+                                <strong th:text="${submission.project.projectIdea}">Project Name</strong>
+                            </p>
+                            <div class="submitted-file">
+                            <span th:if="${submission.submissionFilePath != null}"
+                                  th:with="fileName=${submission.submissionFilePath.substring(submission.submissionFilePath.lastIndexOf('/') + 1)},
+                                           fileExtension=${#strings.substring(fileName, fileName.lastIndexOf('.') + 1).toLowerCase()}">
+                                <a th:href="@{'/download/' + ${fileName}}" target="_blank">
+                                    <span th:if="${fileExtension.matches('jpg|jpeg|png|gif')}"
+                                          class="material-symbols-rounded file-icon">image</span>
+                                    <span th:if="${fileExtension == 'pdf'}"
+                                          class="material-symbols-rounded file-icon pdf">description</span>
+                                    <span th:if="${fileExtension == 'doc' or fileExtension == 'docx'}"
+                                              class="material-symbols-rounded file-icon word">description</span>
+                                    <span th:if="${!(fileExtension.matches('jpg|jpeg|png|gif') or fileExtension=='pdf' or fileExtension=='doc' or fileExtension=='docx')}"
+                                          class="material-symbols-rounded file-icon">insert_drive_file</span>
+                                    <span th:text="${fileName}">File Name</span>
+                                </a>
+                            </span>
+                                <span th:if="${submission.submissionFilePath == null}">
+                                No file submitted.
+                            </span>
+                            </div>
+
+                            <!-- Input to add/update grade -->
+                            <form th:action="@{/task-submissions/grade}" method="post" class="grade-form">
+                                <input type="hidden" name="submissionId" th:value="${submission.id}">
+                                <!-- Grade input and submit button -->
+                                <div class="grade-input-container">
+                                    <input type="number"
+                                           name="grade"
+                                           min="0"
+                                           max="100"
+                                           placeholder="Enter grade"
+                                           th:value="${submission.grade}"
+                                           class="grade-input">
+                                    <button type="submit" class="save-grade-btn">Save</button>
+                                </div>
+
+                                <!-- CSRF Token -->
+                            </form>
+                        </div>
+                    </div>
+                    <div th:if="${task.submissions == null or #lists.isEmpty(task.submissions)}">
+                        <p>No submissions available for this task.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     <div th:if="${tasks == null or #lists.isEmpty(tasks)}">
         <p>No tasks available.</p>
     </div>
+    <div th:if="${tasks == null or #lists.isEmpty(tasks)}">
+        <p>No tasks available.</p>
+    </div>
 </div>
 <!-- Detail View --><!-- Detail View -->
+<!-- Detail View -->
 <div class="detail-view" id="detailView">
     <button class="close-btn" onclick="closeDetailView()">×</button>
     <h2 id="detailTitle"></h2>
     <div id="attachedFileSection" style="border-bottom:2px solid gold">
-
-    <h3 class="taskDescription"><span class="nav-icon material-symbols-rounded">description</span> Task Description</h3>
-    <p id="detailDescription"></p>
-    <div id="attachedFilePreview" class="file-preview">
-        <!-- Thumbnail or icon will be dynamically inserted here -->
+        <h3 class="taskDescription">
+            <span class="nav-icon material-symbols-rounded">description</span> Task Description
+        </h3>
+        <p id="detailDescription"></p>
+        <div id="attachedFilePreview" class="file-preview">
+            <!-- Thumbnail or icon will be dynamically inserted here -->
+        </div>
     </div>
-    <!-- Add this section for the attached file -->
-
+    <div class="task-info">
+        <p class="numberOfSubmissions">
+            <strong>Task Submitted by:&nbsp;</strong>
+            <span id="completedCount"></span> /
+            <span id="totalProjects"></span>
+        </p>
+        <p class="DueDateDiv">
+            <strong>Due Date: &nbsp;</strong>
+            <span id="dueDatee"></span>
+        </p>
     </div>
-<div class="task-info">
-    <p class="numberOfSubmissions">
-        <strong>Task Submitted by:&nbsp;</strong>
-        <span id="completedCount"></span> /
-        <span id="totalProjects"></span>
-    </p>
-    <p class="DueDateDiv">
-        <strong>Due Date: &nbsp;</strong>
-        <span id="dueDatee"></span>
-    </p>
-</div>
-    <div class="task-actions">
-        <button class="complete-btn" onclick="completeTask()">Complete</button>
-        <button class="delete-btn" onclick="deleteTask()">Delete</button>
+    <!-- Container for the submissions of the selected task -->
+    <div id="submissionsContainer">
+        <!-- Submissions HTML will be injected here -->
     </div>
 </div>
 <div class="modal-overlay" id="modalOverlay">
@@ -478,7 +674,6 @@
                     <input type="file" id="fileUpload" name="file" class="file-upload-input" accept=".doc,.docx,.pdf">
                     <div id="fileName" class="file-name"></div>
                 </div>
-                <span th:if="${#authentication}" th:text="${#authentication.name}"></span>
 
             </div>
             <div class="button-group">
@@ -490,163 +685,209 @@
 </div>
 </body>
 <script th:inline="javascript">
-    document.addEventListener('DOMContentLoaded', function() {
-        const taskCards = document.querySelectorAll('.task-card');
-        const detailView = document.getElementById('detailView');
-        const taskForm = document.getElementById('taskForm');
-        const fileUploadContainer = document.getElementById('fileUploadContainer');
-        const fileUploadInput = document.getElementById('fileUpload');
-        const fileNameDisplay = document.getElementById('fileName');
+    document.addEventListener("DOMContentLoaded", () => {
+  const taskCards = document.querySelectorAll(".task-card")
+  const detailView = document.getElementById("detailView")
+  const taskForm = document.getElementById("taskForm")
+  const fileUploadContainer = document.getElementById("fileUploadContainer")
+  const fileUploadInput = document.getElementById("fileUpload")
+  const fileNameDisplay = document.getElementById("fileName")
 
-        // Add event listeners to task cards
-      taskCards.forEach(card => {
-    card.addEventListener('click', function() {
-        const title = this.querySelector('h3').textContent;
-        const description = this.getAttribute('data-description');
-        const totalParticipants = this.getAttribute('data-total-participants');
-        const completedBy = this.getAttribute('data-completed-by');
-        const dueDate = this.querySelector('.cardduedate span').textContent;
-        const attachedFilePath = this.getAttribute('data-attached-file-path'); // Add this attribute
-        const attachedFileName = this.getAttribute('data-attached-file-name'); // Add this attribute
+  taskCards.forEach((card) => {
+    card.addEventListener("click", function () {
+      const title = this.querySelector("h3").textContent
+      const description = this.getAttribute("data-description")
+      const totalParticipants = this.getAttribute("data-total-participants")
+      const completedBy = this.getAttribute("data-completed-by")
+      const dueDate = this.querySelector(".cardduedate span").textContent
+      const attachedFilePath = this.getAttribute("data-attached-file-path")
+      const attachedFileName = this.getAttribute("data-attached-file-name")
 
-        openDetailView(title, description, totalParticipants, completedBy, dueDate, attachedFilePath, attachedFileName);
-    });
-});
-function openDetailView(title, description, totalParticipants, completedBy, dueDate, attachedFilePath, attachedFileName) {
-    document.getElementById('detailTitle').textContent = title;
-    document.getElementById('detailDescription').textContent = description;
-    document.getElementById('completedCount').textContent = completedBy;
-    document.getElementById('totalProjects').textContent = totalParticipants;
-    document.getElementById('dueDatee').textContent = dueDate;
+      const submissionsDataElem = this.querySelector(".submissions-data")
+      const submissionsHTML = submissionsDataElem ? submissionsDataElem.innerHTML : ""
 
-    // Update the attached file section
-    const attachedFilePreview = document.getElementById('attachedFilePreview');
-    attachedFilePreview.innerHTML = ''; // Clear previous content
+      openDetailView(
+        title,
+        description,
+        totalParticipants,
+        completedBy,
+        dueDate,
+        attachedFilePath,
+        attachedFileName,
+        submissionsHTML,
+      )
+    })
+  })
 
+  function openDetailView(
+    title,
+    description,
+    totalParticipants,
+    completedBy,
+    dueDate,
+    attachedFilePath,
+    attachedFileName,
+    submissionsHTML,
+  ) {
+    document.getElementById("detailTitle").textContent = title
+    document.getElementById("detailDescription").textContent = description
+    document.getElementById("completedCount").textContent = completedBy
+    document.getElementById("totalProjects").textContent = totalParticipants
+    document.getElementById("dueDatee").textContent = dueDate
+
+    const attachedFilePreview = document.getElementById("attachedFilePreview")
+    attachedFilePreview.innerHTML = ""
     if (attachedFilePath) {
-        // Extract the file name from the path
-        const fileName = attachedFilePath.substring(attachedFilePath.lastIndexOf('/') + 1);
-
-        // Encode the file name to make it URL-friendly
-        const encodedFileName = encodeURIComponent(fileName);
-
-        // Construct the download URL
-        const downloadUrl = `/download/${encodedFileName}`;
-
-        // Determine the file type
-        const fileExtension = fileName.split('.').pop().toLowerCase();
-        let previewContent;
-
-        if (fileExtension.match(/(jpg|jpeg|png|gif)$/)) {
-            // Display a thumbnail for images
-            previewContent = `<img src="${downloadUrl}" alt="${fileName}" onclick="window.open('${downloadUrl}', '_blank')">`;
-        } else if (fileExtension === 'pdf') {
-            // Display an icon for PDFs
-            previewContent = `<span class="material-symbols-rounded file-icon pdf" onclick="window.open('${downloadUrl}', '_blank')">description</span>`;
-        } else if (fileExtension.match(/(doc|docx)$/)) {
-            // Display an icon for Word documents
-            previewContent = `<span class="material-symbols-rounded file-icon word" onclick="window.open('${downloadUrl}', '_blank')">description</span>`;
-        } else {
-            // Display a default icon for other file types
-            previewContent = `<span class="material-symbols-rounded file-icon" onclick="window.open('${downloadUrl}', '_blank')">insert_drive_file</span>`;
-        }
-
-        // Insert the preview content
-        attachedFilePreview.innerHTML = previewContent;
-        document.getElementById('attachedFileSection').style.display = 'block'; // Show the section
+      const fileName = attachedFilePath.substring(attachedFilePath.lastIndexOf("/") + 1)
+      const encodedFileName = encodeURIComponent(fileName)
+      const fileUrl = `/download/${encodedFileName}`
+      const fileExtension = fileName.split(".").pop().toLowerCase()
+      let previewContent
+      if (fileExtension.match(/(jpg|jpeg|png|gif)$/)) {
+        previewContent = `<img src="${fileUrl}" alt="${fileName}" onclick="window.open('${fileUrl}', '_blank')">`
+      } else if (fileExtension === "pdf") {
+        previewContent = `<span class="material-symbols-rounded file-icon pdf" onclick="window.open('${fileUrl}', '_blank')">description</span>`
+      } else if (fileExtension.match(/(doc|docx)$/)) {
+        previewContent = `<span class="material-symbols-rounded file-icon word" onclick="window.open('${fileUrl}', '_blank')">description</span>`
+      } else {
+        previewContent = `<span class="material-symbols-rounded file-icon" onclick="window.open('${fileUrl}', '_blank')">insert_drive_file</span>`
+      }
+      attachedFilePreview.innerHTML = previewContent
+      document.getElementById("attachedFileSection").style.display = "block"
     } else {
-        document.getElementById('attachedFileSection').style.display = 'none'; // Hide the section if no file is attached
+      document.getElementById("attachedFileSection").style.display = "none"
     }
 
-    detailView.style.display = 'block';
+    const submissionsContainer = document.getElementById("submissionsContainer")
+    submissionsContainer.innerHTML = submissionsHTML
+
+    submissionsContainer.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", function (e) {
+        e.preventDefault()
+        window.open(this.href, "_blank")
+      })
+    })
+
+    detailView.style.display = "block"
+  }
+
+  window.closeDetailView = () => {
+    detailView.style.display = "none"
+  }
+
+  window.openModal = () => {
+    document.getElementById("modalOverlay").style.display = "flex"
+  }
+
+  //Added closeModal function declaration here to fix the undeclared variable error.
+  window.closeModal = () => {
+    document.getElementById("modalOverlay").style.display = "none"
+  }
+  ;["dragenter", "dragover", "dragleave", "drop"].forEach((eventName) => {
+    fileUploadContainer.addEventListener(eventName, preventDefaults, false)
+  })
+
+  function preventDefaults(e) {
+    e.preventDefault()
+    e.stopPropagation()
+  }
+  ;["dragenter", "dragover"].forEach((eventName) => {
+    fileUploadContainer.addEventListener(eventName, highlight, false)
+  })
+  ;["dragleave", "drop"].forEach((eventName) => {
+    fileUploadContainer.addEventListener(eventName, unhighlight, false)
+  })
+
+  function highlight() {
+    fileUploadContainer.classList.add("dragover")
+  }
+
+  function unhighlight() {
+    fileUploadContainer.classList.remove("dragover")
+  }
+
+  fileUploadContainer.addEventListener("drop", handleDrop, false)
+
+  function handleDrop(e) {
+    const dt = e.dataTransfer
+    const files = dt.files
+    fileUploadInput.files = files
+    updateFileName()
+  }
+
+  fileUploadInput.addEventListener("change", updateFileName)
+
+  function updateFileName() {
+    const file = fileUploadInput.files[0]
+    if (file) {
+      fileNameDisplay.textContent = `Selected file: ${file.name}`
+    } else {
+      fileNameDisplay.textContent = ""
+    }
+  }
+
+  taskForm.addEventListener("submit", function (e) {
+    e.preventDefault()
+    const formData = new FormData(this)
+
+    fetch(this.action, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => {
+        if (response.ok) {
+          alert("Task created successfully!")
+          closeModal() //closeModal is now correctly called.
+          location.reload()
+        } else {
+          alert("Error creating task. Please try again.")
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error)
+        alert("An error occurred while creating the task.")
+      })
+  })
+
+  // Add global listener for file links
+  document.body.addEventListener("click", (e) => {
+    if (e.target.tagName === "A" && e.target.href.includes("/download/")) {
+      e.preventDefault()
+      window.open(e.target.href, "_blank")
+    }
+  })
+
+  // Load navbar and sidebar
+  loadComponent("navbar.html", "navbarContainer")
+  loadComponent("sidebar.html", "sidebarContainer")
+
+  // Set active class for current page in sidebar
+  const currentUrl = window.location.href
+  document.querySelectorAll(".sidebar-nav .nav-link").forEach((link) => {
+    if (link.href === currentUrl) {
+      link.classList.add("active")
+    }
+  })
+})
+
+function loadComponent(url, containerId) {
+  fetch(url)
+    .then((response) => response.text())
+    .then((data) => {
+      document.getElementById(containerId).innerHTML = data
+    })
+    .catch((error) => console.error("Error loading component:", error))
 }
-function downloadFile() {
-    const attachedFileLink = document.getElementById('attachedFileLink');
-    const downloadUrl = attachedFileLink.href.replace("/download/", "/download-attachment/"); // Use a different endpoint for download
-    window.location.href = downloadUrl;
-}
-        // Function to close detail view
-        window.closeDetailView = function() {
-            detailView.style.display = 'none';
-        }
 
-        // Function to open modal
-        window.openModal = function() {
-            document.getElementById('modalOverlay').style.display = 'flex';
-        }
+    document.body.addEventListener("click", (e) => {
+  if (e.target.tagName === "A" && e.target.href.includes("/download/")) {
+    e.preventDefault();
+    window.open(e.target.href, "_blank");
+  }
+});
 
-        // Function to close modal
-        window.closeModal = function() {
-            document.getElementById('modalOverlay').style.display = 'none';
-        }['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            fileUploadContainer.addEventListener(eventName, preventDefaults, false);
-        });
 
-        function preventDefaults(e) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            fileUploadContainer.addEventListener(eventName, highlight, false);
-        });
-
-        ['dragleave', 'drop'].forEach(eventName => {
-            fileUploadContainer.addEventListener(eventName, unhighlight, false);
-        });
-
-        function highlight() {
-            fileUploadContainer.classList.add('dragover');
-        }
-
-        function unhighlight() {
-            fileUploadContainer.classList.remove('dragover');
-        }
-
-        fileUploadContainer.addEventListener('drop', handleDrop, false);
-
-        function handleDrop(e) {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            fileUploadInput.files = files;
-            updateFileName();
-        }
-
-        fileUploadInput.addEventListener('change', updateFileName);
-
-        function updateFileName() {
-            const file = fileUploadInput.files[0];
-            if (file) {
-                fileNameDisplay.textContent = `Selected file: ${file.name}`;
-            } else {
-                fileNameDisplay.textContent = '';
-            }
-        }
-
-        // Handle form submission
-        taskForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const formData = new FormData(this);
-
-            fetch(this.action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert('Task created successfully!');
-                    closeModal();
-                    location.reload();
-                } else {
-                    alert('Error creating task. Please try again.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while creating the task.');
-            });
-        });
-    });
 
 </script>
 </html>

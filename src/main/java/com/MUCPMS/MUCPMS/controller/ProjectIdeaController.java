@@ -3,10 +3,7 @@ package com.MUCPMS.MUCPMS.controller;
 import com.MUCPMS.MUCPMS.DTO.request.*;
 import com.MUCPMS.MUCPMS.DTO.response.ApiResponse;
 import com.MUCPMS.MUCPMS.model.*;
-import com.MUCPMS.MUCPMS.service.InstructorService;
-import com.MUCPMS.MUCPMS.service.ProjectIdeaService;
-import com.MUCPMS.MUCPMS.service.ProjectService;
-import com.MUCPMS.MUCPMS.service.StudentsProjectsManagementService;
+import com.MUCPMS.MUCPMS.service.*;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +30,10 @@ public class ProjectIdeaController {
 
     @Autowired
     private InstructorService instructorService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private StudentService studentService;
 
 //    @PostMapping
 //    public ResponseEntity<ApiResponse<ViewProjectIdeaDTO>> createProjectIdea(@Valid @RequestBody CreateProjectIdeaDTO projectIdeaDTO) {
@@ -167,12 +168,17 @@ public class ProjectIdeaController {
 
 
     @GetMapping()
-    public String getProjectIdeas(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
+    public String getProjectIdeas(Model model, Authentication authentication) {
+        User user=userService.getUserByEmail(authentication.getName());
         model.addAttribute("user", user);
+        Instructor instructor=instructorService.getInstructorByEmail(authentication.getName());
+        Student student=studentService.getStudentByEmail(authentication.getName());
 
         List<ProjectIdea> projectIdeas = projectIdeaService.getAllProjectsIdeas();
         model.addAttribute("projectIdeas", projectIdeas);
+        model.addAttribute("instructor",instructor);
+        model.addAttribute("student",student);
+
         // Return the name of the Thymeleaf HTML page (e.g., projectIdeas.html)
         return "projectIdeas";
     }
@@ -191,6 +197,7 @@ public class ProjectIdeaController {
     // Display form to create a new project idea
     @GetMapping("/new")
     public String showCreateForm(Model model) {
+
         model.addAttribute("projectIdea", new ProjectIdea());
         model.addAttribute("instructors", instructorService.getAllInstructors()); // For dropdown in form
         return "CreateProjectIdea"; // Thymeleaf template for the create form
@@ -199,7 +206,6 @@ public class ProjectIdeaController {
     // Handle form submission to create a new project idea
     @PostMapping("/new")
     public String createProjectIdea(@ModelAttribute ProjectIdea projectIdea) {
-
         projectIdeaService.saveProjectIdea(projectIdea);
         return "redirect:/projectIdeas"; // Redirect to the list of project ideas
     }
@@ -215,9 +221,7 @@ public class ProjectIdeaController {
 
     // Handle form submission to update an existing project idea
     @PostMapping("/edit/{id}")
-    public String updateProjectIdea(@PathVariable Long id, @ModelAttribute ProjectIdea projectIdea, @RequestParam String instructorEmail) {
-        Instructor instructor = instructorService.getInstructorByEmail(instructorEmail);
-        projectIdea.setSuggestedBy(instructor);
+    public String updateProjectIdea(@PathVariable Long id, @ModelAttribute ProjectIdea projectIdea) {
         projectIdeaService.saveProjectIdea(projectIdea);
         return "redirect:/projectIdeas"; // Redirect to the list of project ideas
     }

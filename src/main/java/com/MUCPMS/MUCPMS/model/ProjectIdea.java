@@ -22,6 +22,7 @@ public class ProjectIdea {
     private Long projectIdeaId;
     private String projectTitle;
     private String type;
+    @Column(columnDefinition = "TEXT")
     private String projectDescription;
     private String availability;
     @ManyToOne

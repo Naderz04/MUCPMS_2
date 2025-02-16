@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Sidebar Fragment</title>
+    <meta charset="UTF-8">
+    <title>Title</title>
   <link rel="stylesheet" href="/static/css/sidebar.css">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0">
+
 </head>
 <body>
-<!-- Define the sidebar fragment -->
-<aside class="sidebar" th:fragment="sidebar">
+<aside class="sidebar" th:fragment="studentsidebar">
   <!-- Sidebar header -->
   <header class="sidebar-header">
     <a href="#" class="header-logo">
@@ -19,8 +18,8 @@
     <div class="user-info">
       <hr class="divider">
       <div class="user-details">
-        <img th:src="@{'/instructors/' + ${instructor.instructorEmail} + '/photo'}" alt="User Avatar" class="user-avatar">
-        <span class="user-name" th:text="${instructor.instructorName}" >John Doe</span>
+        <img th:src="@{'/students/' + ${student.studentEmail} + '/photo'}" alt="User Avatar" class="user-avatar">
+        <span class="user-name" th:text="${student.studentName}" >John Doe</span>
       </div>
       <hr class="divider">
     </div>
@@ -33,47 +32,40 @@
     <!-- Primary top nav -->
     <ul class="nav-list primary-nav">
       <li class="nav-item">
-        <a th:href="@{/instructors/instructorHome}"
-           class="nav-link"
-           th:classappend="${currentPage == 'instructorHome'} ? ' active' : ''">
+        <a th:href="@{/students/studentHome}"
+          class="nav-link"
+          th:classappend="${currentPage == 'studentHome'} ? ' active' : ''">
           <span class="nav-icon material-symbols-rounded">dashboard</span>
           <span class="nav-label">Home</span>
         </a>
       </li>
+
       <li class="nav-item">
-        <a th:href="@{/instructors/instructorProjects}" class="nav-link">
-          <span class="nav-icon material-symbols-rounded">calendar_today</span>
-          <span class="nav-label">My Projects</span>
+        <a  class="nav-link">
+          <span class="nav-icon material-symbols-rounded">notifications</span>
+          <span class="nav-label">Notifications</span>
         </a>
-      </li>
-      <li class="nav-item">
-        <a th:href="@{/instructors/instructorProgressPage}" class="nav-link">
-          <span class="nav-icon material-symbols-rounded">swipe_right</span>
-          <span class="nav-label">Projects Progress</span>
-        </a>
-      </li>
-      <li class="nav-item">
-        <a th:href="@{/instructors/assessmentSheet}" class="nav-link">
-          <span class="nav-icon material-symbols-rounded">rubric</span>
-          <span class="nav-label">Assessment Sheet</span>
-        </a>
+        <span class="nav-tooltip">Notifications</span>
       </li>
       <li class="nav-item">
         <a th:href="@{/projectIdeas}" class="nav-link">
           <span class="nav-icon material-symbols-rounded">group</span>
           <span class="nav-label">Project Ideas</span>
         </a>
+        <span class="nav-tooltip">Team</span>
       </li>
+
+
       <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a  class="nav-link">
           <span class="nav-icon material-symbols-rounded">chat</span>
           Chats
         </a>
       </li>
       <li class="nav-item">
-        <a th:href="@{/instructors/instructorTasks}" class="nav-link">
-          <span class="nav-icon material-symbols-rounded">task_alt</span>
-          My Tasks
+        <a th:href="@{/projects/notes}" class="nav-link">
+          <span class="nav-icon material-symbols-rounded">note</span>
+          Notes
         </a>
       </li>
     </ul>
@@ -88,7 +80,7 @@
         <span class="nav-tooltip">Profile</span>
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link">
+        <a th:href="@{/logout}" class="nav-link">
           <span class="nav-icon material-symbols-rounded">logout</span>
           <span class="nav-label">Logout</span>
         </a>
@@ -97,17 +89,6 @@
     </ul>
   </nav>
 </aside>
-<script>
-  // Run when the document is fully loaded
-  document.addEventListener('DOMContentLoaded', () => {
-    const currentUrl = window.location.href;
-    document.querySelectorAll('.sidebar-nav .nav-link').forEach(link => {
-      if(link.href === currentUrl) {
-        link.classList.add('active');
-      }
-    });
-  });
 
-</script>
 </body>
 </html>

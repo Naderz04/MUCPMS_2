@@ -20,6 +20,7 @@ public class Task {
     private Long taskId;
 
     private String taskName; // e.g., "Select Supervisor", "Submit Functional Requirements"
+    @Column(columnDefinition = "TEXT")
     private String taskDescription;
     @ManyToMany(mappedBy = "tasks")
     private List<Project> projects = new ArrayList<>(); // Many projects can share the same task

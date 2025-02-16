@@ -9,5 +9,6 @@ import java.util.List;
 
 public interface ProjectRepository extends JpaRepository<Project,Long> {
     List<Project> findProjectsByInstructor (Instructor instructor);
+    List<Project> findByStatus(String status);
 
 }

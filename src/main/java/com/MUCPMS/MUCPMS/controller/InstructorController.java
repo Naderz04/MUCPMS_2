@@ -3,6 +3,8 @@ package com.MUCPMS.MUCPMS.controller;
 import com.MUCPMS.MUCPMS.DTO.request.*;
 import com.MUCPMS.MUCPMS.DTO.response.ApiResponse;
 import com.MUCPMS.MUCPMS.model.*;
+import com.MUCPMS.MUCPMS.repository.AssessmentSheetRepository;
+import com.MUCPMS.MUCPMS.repository.ProjectRepository;
 import com.MUCPMS.MUCPMS.service.*;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -24,6 +26,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
@@ -38,21 +42,17 @@ public class InstructorController {
         private ProjectService projectService;
         @Autowired
         private ProjectIdeaService projectIdeaService;
+        @Autowired
+        private AssessmentService assessmentService;
+        @Autowired
+        private TaskSubmissionService taskSubmissionService;
+
+        @Autowired
+        private ProjectRepository projectRepository;
 
         private static final Logger logger = LoggerFactory.getLogger(InstructorController.class);
 
 
-//        @PostMapping
-//        public ResponseEntity<ApiResponse<Instructor>> createInstructor(@Valid @RequestBody CreateInstructorDTO instructorDTO) {
-//            try {
-//                Instructor createdInstructor = instructorService.CreateInstructor(instructorDTO);
-//                return ResponseEntity.status(HttpStatus.CREATED)
-//                        .body(new ApiResponse<>(true, createdInstructor, "Instructor created successfully", HttpStatus.CREATED.value()));
-//            } catch (Exception e) {
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                        .body(new ApiResponse<>(false, null, "Failed to create Instructor: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
-//            }
-//        }
 
     @PostMapping()
     public String createInstructor(@Valid @RequestBody CreateInstructorDTO instructorDTO, Model model) {
@@ -123,23 +123,6 @@ public class InstructorController {
     }
 
 
-//    @GetMapping("/{email}")
-//    public String getInstructorByEmail(@PathVariable String email, Model model) {
-//        try {
-//            Instructor instructor = instructorService.getInstructorByEmail(email);
-//            if (instructor != null) {
-//                model.addAttribute("instructor", instructor);
-//                return "view-instructor"; // Return a view page showing instructor details
-//            } else {
-//                model.addAttribute("errorMessage", "Instructor not found");
-//                return "error"; // Show an error page
-//            }
-//        } catch (Exception e) {
-//            model.addAttribute("errorMessage", "Failed to retrieve instructor: " + e.getMessage());
-//            return "error"; // Error page
-//        }
-//    }
-
     @GetMapping("/{email}")
     public String getInstructorByEmail(@PathVariable String email, Model model) {
         try {
@@ -158,38 +141,6 @@ public class InstructorController {
     }
 
 //
-//
-//    @GetMapping("/{email}")
-//    public ResponseEntity<ApiResponse<ViewInstructorDTO>> getInstructorByEmail(@PathVariable String email) {
-//        try {
-//            Instructor instructor = instructorService.getInstructorByEmail(email);
-//
-//            if (instructor != null) {
-//                // Extract the list of project IDs
-//                List<Long> projectIds = instructor.getProjects().stream()
-//                        .map(Project::getProjectId) // Assuming ProjectId is the unique identifier
-//                        .collect(Collectors.toList());
-//
-//                // Create the ViewInstructorDTO
-//                ViewInstructorDTO viewInstructorDTO = new ViewInstructorDTO(
-//                        instructor.getInstructorEmail(),
-//                        instructor.getInstructorName(),
-//                        projectIds
-//                );
-//
-//                return ResponseEntity.ok(new ApiResponse<>(true, viewInstructorDTO, "Instructor retrieved successfully", HttpStatus.OK.value()));
-//            } else {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-//                        .body(new ApiResponse<>(false, null, "Instructor not found", HttpStatus.NOT_FOUND.value()));
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body(new ApiResponse<>(false, null, "Failed to retrieve Instructor: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value()));
-//        }
-//    }
-//
-
-
 
     @PutMapping("/{email}")
     public ResponseEntity<ApiResponse<UpdateInstructorDTO>> updateInstructor(@PathVariable String id, @RequestBody UpdateInstructorDTO updateInstructorDTO) {
@@ -269,23 +220,66 @@ public class InstructorController {
         // Return the name of the Thymeleaf HTML page (e.g., projectIdeas.html)
         return "projectIdeas";
     }
+    @GetMapping("/instructorProgressPage")
+    public String getProjects(Model model,Authentication authentication) {
+
+        String email = authentication.getName();
+        Instructor instructor=instructorService.getInstructorByEmail(email);
+        List<Project> projects = studentsProjectsManagementService.getProjectsByInstructorEmail(authentication.getName());
+
+        model.addAttribute("instructor", instructor);
+
+        model.addAttribute("allProjects", projects);
+        model.addAttribute("lateProjects", projectRepository.findByStatus("late"));
+        model.addAttribute("onProgressProjects", projectRepository.findByStatus("onProgress"));
+        model.addAttribute("almostCompletedProjects", projectRepository.findByStatus("almostCompleted"));
+        model.addAttribute("completedProjects", projectRepository.findByStatus("completed"));
+
+        return "instructorProgressPage"; // projects.html Thymeleaf template
+    }
+
+    @PostMapping("/updateStatus")
+    public ResponseEntity<?> updateProjectStatus(@RequestBody Map<String, String> payload) {
+        // Expecting payload with "projectId" and "status"
+        Long projectId = Long.valueOf(payload.get("projectId"));
+        String newStatus = payload.get("status");
+
+        Optional<Project> projectOpt = projectRepository.findById(projectId);
+        if (!projectOpt.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Project project = projectOpt.get();
+        project.setStatus(newStatus);
+        projectRepository.save(project);
+
+        return ResponseEntity.ok().build();
+    }
 
     @GetMapping("/instructorHome")
     public String instructorHome(Model model, Authentication authentication) {
         String email = authentication.getName();
+        Instructor instructor=instructorService.getInstructorByEmail(email);
         List<Task> tasks = studentsProjectsManagementService.getTasksByInstructorEmail(email);
         List<Project> projects = studentsProjectsManagementService.getProjectsByInstructorEmail(email);
         model.addAttribute("tasks", tasks);
         model.addAttribute("projects", projects);
+        model.addAttribute("instructor", instructor);
+
         return "instructorHome";
 
     }
     @GetMapping("/instructorTasks")
     public String getAllTasks(Model model, Authentication authentication) {
         String email = authentication.getName();
+
         Instructor instructor = instructorService.getInstructorByEmail(email);
         List<Task> taskList = studentsProjectsManagementService.getTasksByInstructorEmail(email);
+
+
         model.addAttribute("tasks", taskList);
+
+        model.addAttribute("instructor", instructor);
         return "instructorTasks";
     }
 
@@ -295,17 +289,58 @@ public class InstructorController {
         Instructor instructor = instructorService.getInstructorByEmail(email);
         List<Project> projects = studentsProjectsManagementService.getProjectsByInstructorEmail(email);
         model.addAttribute("projects", projects);
+        model.addAttribute("instructor", instructor);
         return "instructorProjects";
     }
+
+        @GetMapping("/{projectId}/details")
+        public String getProjectDetails(@PathVariable Long projectId, Model model) {
+            Project project = projectService.getProjectById(projectId);
+
+
+
+            // Fetch tasks assigned to the project
+            List<Task> tasks = studentsProjectsManagementService
+                    .getTasksByInstructorEmail(project.getInstructor().getInstructorEmail());
+
+            // Get all task submissions for the project
+            Map<Long, TaskSubmission> taskSubmissions = taskSubmissionService.getTaskSubmissionsForProject(projectId);
+
+            // Classify tasks based on their status
+            List<Task> assignedTasks = tasks.stream()
+                    .filter(task -> studentsProjectsManagementService.getStatusForProject(task, project).equals("Assigned"))
+                    .collect(Collectors.toList());
+
+            List<Task> missingTasks = tasks.stream()
+                    .filter(task -> studentsProjectsManagementService.getStatusForProject(task, project).equals("Missing"))
+                    .collect(Collectors.toList());
+
+            List<Task> doneTasks = tasks.stream()
+                    .filter(task -> studentsProjectsManagementService.getStatusForProject(task, project).equals("Done"))
+                    .collect(Collectors.toList());
+
+            // Pass data to the Thymeleaf template
+            model.addAttribute("assignedTasks", assignedTasks);
+            model.addAttribute("missingTasks", missingTasks);
+            model.addAttribute("doneTasks", doneTasks);
+            model.addAttribute("taskSubmissions", taskSubmissions);
+            model.addAttribute("project", project);
+
+            return "projectDetails"; // Your Thymeleaf template name
+        }
+
 
     @GetMapping("/{projectId}/details/{taskId}")
     public String getTaskDetails(@PathVariable Long projectId, @PathVariable Long taskId, Model model) {
         try {
             // Fetch task details
             ViewTaskSubmissionDTO taskDetails = studentsProjectsManagementService.getTaskDetails(projectId, taskId);
-
+            List<ViewTaskSubmissionDTO> taskSubmissions=taskSubmissionService.getSubmissionsByTask(taskId);
             // Add task details to the model
+            model.addAttribute("selectedTaskSubmissions",taskSubmissions);
             model.addAttribute("taskDetails", taskDetails);
+            model.addAttribute("project", projectService.getProjectById(projectId));
+            model.addAttribute("taskSubmissions", taskSubmissions);
             return "taskDetails"; // Return the name of the view to render task details
         } catch (EntityNotFoundException e) {
             model.addAttribute("error", "Task or project not found: " + e.getMessage());
@@ -345,6 +380,26 @@ public class InstructorController {
         }
     }
 
-}
+
+    @GetMapping("/assessmentSheet")
+    public String showAssessmentPage(Model model) {
+        // This will get all projects with their assessments (creating new ones if needed)
+        model.addAttribute("assessments", assessmentService.getAllAssessmentsWithProjects());
+        return "assessmentSheet";
+    }
+
+
+
+    @PostMapping("/save/{projectId}")
+    @ResponseBody
+    public AssessmentGrade saveAssessment(@PathVariable Long projectId, @RequestBody AssessmentGrade assessment,Model model) {
+        Project project=assessment.getProject();
+        model.addAttribute("project", project);
+        model.addAttribute("assessments", assessmentService.getAllAssessmentsWithProjects());
+        model.addAttribute("projects", projectService.getAllProjects());
+
+        return assessmentService.saveAssessment(projectId, assessment);
+    }
+    }
 
 
